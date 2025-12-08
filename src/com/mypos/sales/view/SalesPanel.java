@@ -61,6 +61,8 @@ public class SalesPanel extends javax.swing.JPanel {
         jLabel4.setText("ADMIN");
         jLabel4.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
+        jComboBox1.setBackground(new java.awt.Color(153, 153, 255));
+        jComboBox1.setForeground(new java.awt.Color(255, 255, 255));
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Today", "Weekly", "Monthly", "All Time" }));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -68,6 +70,8 @@ public class SalesPanel extends javax.swing.JPanel {
             }
         });
 
+        jButton1.setBackground(new java.awt.Color(153, 153, 255));
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("EXPORT PDF");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
