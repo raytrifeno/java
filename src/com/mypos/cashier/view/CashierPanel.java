@@ -38,10 +38,10 @@ public class CashierPanel extends javax.swing.JPanel {
         setPreferredSize(new java.awt.Dimension(1030, 670));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel2.setText("Cashier");
+        jLabel2.setText("CASHIER");
 
-        jTextField1.setBackground(new java.awt.Color(153, 153, 255));
-        jTextField1.setForeground(new java.awt.Color(255, 255, 255));
+        jTextField1.setBackground(new java.awt.Color(204, 204, 255));
+        jTextField1.setForeground(new java.awt.Color(102, 102, 102));
         jTextField1.setText("Input barcode...");
         jTextField1.addActionListener(this::jTextField1ActionPerformed);
 
@@ -50,7 +50,7 @@ public class CashierPanel extends javax.swing.JPanel {
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-admin-24.png"))); // NOI18N
-        jLabel4.setText("Admin ");
+        jLabel4.setText("ADMIN");
         jLabel4.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
         jButton1.setBackground(new java.awt.Color(153, 153, 255));
@@ -60,15 +60,15 @@ public class CashierPanel extends javax.swing.JPanel {
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Id Product", "Name Product", "Quantity", "Line Total"
+                "Id Product", "Name Product", "Price", "Quantity", "Line Total"
             }
         ));
         jTable2.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -109,9 +109,9 @@ public class CashierPanel extends javax.swing.JPanel {
                     .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(27, 27, 27)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(249, Short.MAX_VALUE))
+                .addContainerGap(234, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
