@@ -4,6 +4,10 @@
  */
 package com.mypos.auth.view;
 
+import com.mypos.auth.dao.UserDao;
+import com.mypos.auth.model.User;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author raysu
@@ -135,22 +139,27 @@ public class LoginForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    String username = jTextField1.getText();
-String password = new String(jPasswordField1.getPassword());
+        String username = jTextField1.getText();
+        String password = new String(jPasswordField1.getPassword());
 
-if (username.equals("admin") && password.equals("123")) {
-    com.mypos.app.MainFrame mainFrame = new com.mypos.app.MainFrame();
-    mainFrame.setVisible(true);
-    this.dispose();
-} else {
-    javax.swing.JOptionPane.showMessageDialog(
-        this,
-        "Invalid username or password.",
-        "Login Error",
-        javax.swing.JOptionPane.ERROR_MESSAGE
-    );
-}
+        if (username.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Username and password cannot be empty.", "Login Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
+        UserDao userDao = new UserDao();
+        User user = userDao.authenticate(username, password);
+
+        if (user != null) {
+            // Authentication successful
+            JOptionPane.showMessageDialog(this, "Welcome, " + user.getUsername() + "!", "Login Success", JOptionPane.INFORMATION_MESSAGE);
+            com.mypos.app.MainFrame mainFrame = new com.mypos.app.MainFrame();
+            mainFrame.setVisible(true);
+            this.dispose();
+        } else {
+            // Authentication failed
+            JOptionPane.showMessageDialog(this, "Invalid username or password.", "Login Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
