@@ -15,8 +15,32 @@ public class ProductPanel extends javax.swing.JPanel {
      */
     public ProductPanel() {
         initComponents();
+        loadData();
     }
-
+    
+    private void loadData() {
+         com.mypos.product.dao.ProductDao productDao = new com.mypos.product.dao.ProductDao();
+         java.util.List<com.mypos.product.model.Product> products = productDao.getAllProducts();
+    
+         // Get the table model from the JTable created by the GUI builder
+         javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable2.getModel();
+    
+         // Clear any existing rows
+         model.setRowCount(0);
+   
+        // Loop through the list of products and add them to the table model
+        for (com.mypos.product.model.Product product : products) {
+            model.addRow(new Object[]{
+                product.getCode(),       // "ID Produk"
+                product.getName(),       // "Name Product"
+                product.getCategory(),   // "Category"
+                product.getPrice(),      // "Price"
+                product.getStock(),      // "Stock"
+                product.getCreatedAt(),  // "Create At"
+                product.getUpdatedAt()   // "Update At"
+            });
+        }
+   }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -33,9 +57,8 @@ public class ProductPanel extends javax.swing.JPanel {
         AddProduct = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
-        jLabel4 = new javax.swing.JLabel();
         StockFilter = new javax.swing.JComboBox<>();
-        UpdateProduct = new javax.swing.JButton();
+        EditProduct = new javax.swing.JButton();
         DeleteProduct = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1030, 670));
@@ -80,27 +103,23 @@ public class ProductPanel extends javax.swing.JPanel {
         jTable2.setPreferredSize(new java.awt.Dimension(800, 600));
         jScrollPane2.setViewportView(jTable2);
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 2, 20)); // NOI18N
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-admin-24.png"))); // NOI18N
-        jLabel4.setText("ADMIN");
-        jLabel4.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-
         StockFilter.setBackground(new java.awt.Color(204, 204, 255));
         StockFilter.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         StockFilter.setForeground(new java.awt.Color(102, 102, 255));
         StockFilter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Stock < 10", "Stock < 25", "Stock < 50" }));
         StockFilter.addActionListener(this::StockFilterActionPerformed);
 
-        UpdateProduct.setBackground(new java.awt.Color(204, 255, 204));
-        UpdateProduct.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        UpdateProduct.setForeground(new java.awt.Color(0, 102, 0));
-        UpdateProduct.setText("Update");
-        UpdateProduct.addActionListener(this::UpdateProductActionPerformed);
+        EditProduct.setBackground(new java.awt.Color(204, 255, 204));
+        EditProduct.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        EditProduct.setForeground(new java.awt.Color(0, 102, 0));
+        EditProduct.setText("Edit");
+        EditProduct.addActionListener(this::EditProductActionPerformed);
 
         DeleteProduct.setBackground(new java.awt.Color(255, 204, 204));
         DeleteProduct.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         DeleteProduct.setForeground(new java.awt.Color(204, 0, 0));
         DeleteProduct.setText("Delete");
+        DeleteProduct.addActionListener(this::DeleteProductActionPerformed);
         DeleteProduct.addActionListener(this::DeleteProductActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -111,14 +130,13 @@ public class ProductPanel extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(UpdateProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(EditProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(DeleteProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel4))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(InputProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -135,10 +153,8 @@ public class ProductPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addGap(25, 25, 25)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(AddProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -150,7 +166,7 @@ public class ProductPanel extends javax.swing.JPanel {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(UpdateProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(EditProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(DeleteProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(19, 19, 19))
         );
@@ -161,15 +177,46 @@ public class ProductPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_CategoryFilterActionPerformed
 
     private void AddProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddProductActionPerformed
-            // Cari parent window (bisa JFrame atau JDialog)
-            java.awt.Window parentWindow = javax.swing.SwingUtilities.getWindowAncestor(this);
+     java.awt.Window parentWindow = javax.swing.SwingUtilities.getWindowAncestor(this);
+    
+     // This code assumes you have created a dialog class named 'AddProduct'
+     // that has public getter methods like getProductCode(), getProductName(), etc.,
+     // and an isConfirmed() method.
+     try {
+         // Create an instance of your dialog
+         AddProduct dialog = new AddProduct((java.awt.Frame) parentWindow, true);
+   
+        // Show the dialog; the code will pause here until it's closed.
+        dialog.setVisible(true);
+   
+        // This part runs ONLY after the dialog is closed
+        if (dialog.isConfirmed()) {
+            // Create a new Product object from the dialog's fields
+            com.mypos.product.model.Product newProduct = new com.mypos.product.model.Product();
+            newProduct.setCode(dialog.getProductCode());
+            newProduct.setName(dialog.getProductName());
+            newProduct.setCategory(dialog.getProductCategory());
+            newProduct.setPrice(new java.math.BigDecimal(dialog.getProductPrice()));
+            newProduct.setStock(Integer.parseInt(dialog.getProductStock()));
+   
+            // Use the DAO to save the new product to the database
+            com.mypos.product.dao.ProductDao productDao = new com.mypos.product.dao.ProductDao();
+            boolean success = productDao.addProduct(newProduct);
+   
+            if (success) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Product added successfully!");
+                // Refresh the table to show the new product
+                loadData();
+            }
+            // NOTE: The DAO already handles showing a "duplicate entry" error.
+        }
+    }catch (NumberFormatException e) {
+        // Handle cases where price or stock are not valid numbers
+        javax.swing.JOptionPane.showMessageDialog(this, "Invalid number format for Price or Stock.", "Input Error",
+      javax.swing.JOptionPane.ERROR_MESSAGE);
+    }
+        // This error happens if the AddProduct class does not exist yet.
 
-            // Buat dialog AddProduct (modal = true)
-            AddProduct dialog = new AddProduct((java.awt.Frame) parentWindow, true);
-
-            // Tampilkan dialog
-            dialog.setLocationRelativeTo(parentWindow); // Supaya muncul di tengah
-            dialog.setVisible(true);
     }//GEN-LAST:event_AddProductActionPerformed
 
     private void SearchProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchProductActionPerformed
@@ -180,7 +227,7 @@ public class ProductPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_StockFilterActionPerformed
 
-    private void UpdateProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateProductActionPerformed
+    private void EditProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditProductActionPerformed
             // Cari parent window (bisa JFrame atau JDialog)
             java.awt.Window parentWindow = javax.swing.SwingUtilities.getWindowAncestor(this);
 
@@ -190,9 +237,9 @@ public class ProductPanel extends javax.swing.JPanel {
             // Tampilkan dialog
             dialog.setLocationRelativeTo(parentWindow); // Supaya muncul di tengah
             dialog.setVisible(true);
-    }//GEN-LAST:event_UpdateProductActionPerformed
-    
-    private void DeleteProductActionPerformed(java.awt.event.ActionEvent evt) {                                              
+    }//GEN-LAST:event_EditProductActionPerformed
+
+    private void DeleteProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteProductActionPerformed
         // Cari parent window (bisa JFrame atau JDialog)
             java.awt.Window parentWindow = javax.swing.SwingUtilities.getWindowAncestor(this);
 
@@ -202,18 +249,18 @@ public class ProductPanel extends javax.swing.JPanel {
             // Tampilkan dialog
             dialog.setLocationRelativeTo(parentWindow); // Supaya muncul di tengah
             dialog.setVisible(true);
-    } 
+    }//GEN-LAST:event_DeleteProductActionPerformed
+ 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AddProduct;
     private javax.swing.JComboBox<String> CategoryFilter;
     private javax.swing.JButton DeleteProduct;
+    private javax.swing.JButton EditProduct;
     private javax.swing.JTextField InputProduct;
     private javax.swing.JButton SearchProduct;
     private javax.swing.JComboBox<String> StockFilter;
-    private javax.swing.JButton UpdateProduct;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable2;
     // End of variables declaration//GEN-END:variables

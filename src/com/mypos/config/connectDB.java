@@ -7,7 +7,8 @@ import javax.swing.JOptionPane;
 
 /**
  * A utility class to handle the connection to the MySQL database.
- * It uses a static method to ensure a single connection instance is reused.
+ * It uses a static method to ensure a single connection instance is reused,
+ * and creates a new one if the previous connection was closed.
  */
 public class connectDB {
 
@@ -15,30 +16,29 @@ public class connectDB {
     private static Connection mysqlconfig;
 
     /**
-     * Gets the active database connection. If a connection does not exist,
-     * it creates one.
+     * Gets the active database connection. If a connection does not exist
+     * or has been closed, it creates a new one.
      * 
      * @return The active database Connection object.
      * @throws SQLException if a database access error occurs.
      */
     public static Connection getConnection() throws SQLException {
-        // Check if the connection has not been created yet.
-        if (mysqlconfig == null) {
+        // CRITICAL FIX: Check if the connection is null OR if it has been closed.
+        if (mysqlconfig == null || mysqlconfig.isClosed()) {
             try {
-                // Database connection details for XAMPP
+                // Database connection details
                 String url = "jdbc:mysql://localhost:3306/pos_tr"; 
                 String user = "root";
-                String password = ""; // Default XAMPP password is empty
+                String password = ""; // Default XAMPP/Laragon password
                 
                 // Register the MySQL driver
                 DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
                 
-                // Establish the connection
+                // Establish the new connection
                 mysqlconfig = DriverManager.getConnection(url, user, password);
                 
             } catch (SQLException e) {
-                // If connection fails, show an error and re-throw the exception
-                // so the calling code knows something went wrong.
+                // If the new connection fails, show an error and propagate the exception.
                 JOptionPane.showMessageDialog(
                     null, 
                     "Error connecting to database: " + e.getMessage(), 
