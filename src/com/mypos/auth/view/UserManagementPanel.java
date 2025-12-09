@@ -42,7 +42,15 @@ public class UserManagementPanel extends javax.swing.JPanel {
             new String [] {
                 "No", "Name", "Role", "Create At", "Update At"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jTable2.setPreferredSize(new java.awt.Dimension(800, 600));
         jScrollPane2.setViewportView(jTable2);
 
@@ -69,11 +77,13 @@ public class UserManagementPanel extends javax.swing.JPanel {
         Delete.setBackground(new java.awt.Color(255, 51, 51));
         Delete.setForeground(new java.awt.Color(255, 255, 255));
         Delete.setText("Delete");
+        Delete.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         Delete.addActionListener(this::DeleteActionPerformed);
 
         Edit.setBackground(new java.awt.Color(153, 153, 255));
         Edit.setForeground(new java.awt.Color(255, 255, 255));
         Edit.setText("Edit");
+        Edit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         Edit.addActionListener(this::EditActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -140,35 +150,34 @@ public class UserManagementPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_SearchBarActionPerformed
 
     private void AddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddActionPerformed
-    // 1. Panggil dialog popup
-        com.mypos.auth.view.AddUserDialog dialog = new com.mypos.auth.view.AddUserDialog();
-
-        // 2. Pasang listener (telinga) untuk menunggu popup ditutup
-        dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosed(java.awt.event.WindowEvent e) {
-                // Kode ini jalan setelah dialog tertutup
-                if (dialog.isConfirmed()) {
-                    String username = dialog.getUsername();
-                    String role = dialog.getRole();
-                    
-                    // Ambil model tabel dari jTable2 (sesuai variabel tabel kamu)
-                    javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable2.getModel();
-                    
-                    // Tambah baris baru ke tabel: [No, Name, Role, Create At, Update At]
-                    model.addRow(new Object[]{
-                        model.getRowCount() + 1,     // No
-                        username,                    // Name
-                        role,                        // Role
-                        new java.util.Date(),        // Create At
-                        new java.util.Date()         // Update At
-                    });
-                }
-            }
-        });
-
-        // 3. Tampilkan dialog
+    // 1. Ambil parent frame agar dialog muncul sebagai modal yang benar
+        javax.swing.JFrame parentFrame = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+        
+        // 2. Buat Instance dari AddUserDialog (Pastikan import atau nama paketnya benar)
+        // Parameter 'true' artinya MODAL
+        com.mypos.auth.view.AddUserDialog dialog = new com.mypos.auth.view.AddUserDialog(parentFrame, true);
+        
+        // 3. Tampilkan Dialog (Kode PAUSE di sini sampai dialog ditutup)
         dialog.setVisible(true);
+        
+        // 4. Proses data setelah dialog ditutup
+        if (dialog.isConfirmed()) {
+            String username = dialog.getUsername();
+            String role = dialog.getRole(); // Mengambil role (Admin/Cashier)
+        
+            // 5. Masukkan data ke tabel
+            javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable2.getModel();
+            
+            model.addRow(new Object[]{
+                model.getRowCount() + 1, // No
+                username,                // Name
+                role,                    // Role
+                new java.util.Date(),    // Created At
+                new java.util.Date()     // Updated At
+            });
+        }
+    
+   
     }//GEN-LAST:event_AddActionPerformed
 
     private void DeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteActionPerformed
