@@ -29,16 +29,18 @@ public class ProductPanel extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         InputProduct = new javax.swing.JTextField();
         SearchProduct = new javax.swing.JButton();
-        CategorySelect = new javax.swing.JComboBox<>();
+        CategoryFilter = new javax.swing.JComboBox<>();
         AddProduct = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        StockFilter = new javax.swing.JComboBox<>();
+        UpdateProduct = new javax.swing.JButton();
+        DeleteProduct = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1030, 670));
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel2.setText("PRODUCT");
 
         InputProduct.setBackground(new java.awt.Color(204, 204, 255));
@@ -51,49 +53,55 @@ public class ProductPanel extends javax.swing.JPanel {
         SearchProduct.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         SearchProduct.addActionListener(this::SearchProductActionPerformed);
 
-        CategorySelect.setBackground(new java.awt.Color(153, 153, 255));
-        CategorySelect.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
-        CategorySelect.setForeground(new java.awt.Color(255, 255, 255));
-        CategorySelect.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All Product", "Grocery", "Drinks", "Snacks", "Care", "Cleaning", "Health", "Baby", "Tobacco", "General" }));
-        CategorySelect.setToolTipText("AllProduct");
-        CategorySelect.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        CategorySelect.setFocusCycleRoot(true);
-        CategorySelect.addActionListener(this::CategorySelectActionPerformed);
+        CategoryFilter.setBackground(new java.awt.Color(204, 204, 255));
+        CategoryFilter.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        CategoryFilter.setForeground(new java.awt.Color(102, 102, 255));
+        CategoryFilter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All Product", "Grocery", "Drinks", "Snacks", "Care", "Cleaning", "Health", "Baby", "Tobacco", "General" }));
+        CategoryFilter.setToolTipText("AllProduct");
+        CategoryFilter.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        CategoryFilter.setFocusCycleRoot(true);
+        CategoryFilter.addActionListener(this::CategoryFilterActionPerformed);
 
-        AddProduct.setBackground(new java.awt.Color(153, 153, 255));
-        AddProduct.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        AddProduct.setForeground(new java.awt.Color(255, 255, 255));
+        AddProduct.setBackground(new java.awt.Color(204, 204, 255));
+        AddProduct.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        AddProduct.setForeground(new java.awt.Color(0, 51, 204));
         AddProduct.setText("Add Product");
         AddProduct.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         AddProduct.addActionListener(this::AddProductActionPerformed);
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+
             },
             new String [] {
-                "Barcode", "Name Product", "Category", "Price", "Stock", "Create At", "Update At"
+                "ID Produk", "Name Product", "Category", "Price", "Stock", "Create At", "Update At"
             }
         ));
         jTable2.setPreferredSize(new java.awt.Dimension(800, 600));
         jScrollPane2.setViewportView(jTable2);
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 2, 20)); // NOI18N
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-admin-24.png"))); // NOI18N
         jLabel4.setText("ADMIN");
         jLabel4.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
-        jComboBox1.setBackground(new java.awt.Color(153, 153, 255));
-        jComboBox1.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
-        jComboBox1.setForeground(new java.awt.Color(255, 255, 255));
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Stock < 10", "Stock < 25", "Stock < 50" }));
-        jComboBox1.addActionListener(this::jComboBox1ActionPerformed);
+        StockFilter.setBackground(new java.awt.Color(204, 204, 255));
+        StockFilter.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        StockFilter.setForeground(new java.awt.Color(102, 102, 255));
+        StockFilter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Stock < 10", "Stock < 25", "Stock < 50" }));
+        StockFilter.addActionListener(this::StockFilterActionPerformed);
+
+        UpdateProduct.setBackground(new java.awt.Color(204, 255, 204));
+        UpdateProduct.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        UpdateProduct.setForeground(new java.awt.Color(0, 102, 0));
+        UpdateProduct.setText("Update");
+        UpdateProduct.addActionListener(this::UpdateProductActionPerformed);
+
+        DeleteProduct.setBackground(new java.awt.Color(255, 204, 204));
+        DeleteProduct.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        DeleteProduct.setForeground(new java.awt.Color(204, 0, 0));
+        DeleteProduct.setText("Delete");
+        DeleteProduct.addActionListener(this::DeleteProductActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -102,6 +110,10 @@ public class ProductPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(UpdateProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(DeleteProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
@@ -112,9 +124,9 @@ public class ProductPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(SearchProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 306, Short.MAX_VALUE)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(StockFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(32, 32, 32)
-                        .addComponent(CategorySelect, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(CategoryFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(30, 30, 30)
                         .addComponent(AddProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(19, 19, 19))
@@ -130,19 +142,23 @@ public class ProductPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(AddProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(CategorySelect, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(CategoryFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(StockFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(InputProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(SearchProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
-                .addGap(94, 94, 94))
+                .addGap(29, 29, 29)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(UpdateProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(DeleteProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(19, 19, 19))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void CategorySelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CategorySelectActionPerformed
+    private void CategoryFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CategoryFilterActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_CategorySelectActionPerformed
+    }//GEN-LAST:event_CategoryFilterActionPerformed
 
     private void AddProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddProductActionPerformed
             // Cari parent window (bisa JFrame atau JDialog)
@@ -160,17 +176,42 @@ public class ProductPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_SearchProductActionPerformed
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+    private void StockFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StockFilterActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    }//GEN-LAST:event_StockFilterActionPerformed
 
+    private void UpdateProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateProductActionPerformed
+            // Cari parent window (bisa JFrame atau JDialog)
+            java.awt.Window parentWindow = javax.swing.SwingUtilities.getWindowAncestor(this);
+
+            // Buat dialog AddProduct (modal = true)
+            UpdateProduct dialog = new UpdateProduct((java.awt.Frame) parentWindow, true);
+
+            // Tampilkan dialog
+            dialog.setLocationRelativeTo(parentWindow); // Supaya muncul di tengah
+            dialog.setVisible(true);
+    }//GEN-LAST:event_UpdateProductActionPerformed
+    
+    private void DeleteProductActionPerformed(java.awt.event.ActionEvent evt) {                                              
+        // Cari parent window (bisa JFrame atau JDialog)
+            java.awt.Window parentWindow = javax.swing.SwingUtilities.getWindowAncestor(this);
+
+            // Buat dialog AddProduct (modal = true)
+            DeleteProduct dialog = new DeleteProduct((java.awt.Frame) parentWindow, true);
+
+            // Tampilkan dialog
+            dialog.setLocationRelativeTo(parentWindow); // Supaya muncul di tengah
+            dialog.setVisible(true);
+    } 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AddProduct;
-    private javax.swing.JComboBox<String> CategorySelect;
+    private javax.swing.JComboBox<String> CategoryFilter;
+    private javax.swing.JButton DeleteProduct;
     private javax.swing.JTextField InputProduct;
     private javax.swing.JButton SearchProduct;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> StockFilter;
+    private javax.swing.JButton UpdateProduct;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane2;
