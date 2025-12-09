@@ -42,10 +42,11 @@ public class CashierPanel extends javax.swing.JPanel {
 
         jTextField1.setBackground(new java.awt.Color(204, 204, 255));
         jTextField1.setForeground(new java.awt.Color(102, 102, 102));
-        jTextField1.setText("Input barcode...");
+        jTextField1.setText("Input barcode..");
         jTextField1.addActionListener(this::jTextField1ActionPerformed);
 
         jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-qr-code-48.png"))); // NOI18N
+        jButton5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton5.addActionListener(this::jButton5ActionPerformed);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
