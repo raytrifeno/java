@@ -36,12 +36,14 @@ public class MainFrame extends javax.swing.JFrame {
         final String PRODUCT_KEY = "PRODUCT";
         final String CASHIER_KEY = "CASHIER";
         final String SALES_KEY = "SALES";
+        final String USERS_KEY = "USERS";
 
         // --- Add your panels to the contentPanel ---
         contentPanel.add(new com.mypos.dashboard.view.DashboardPanel(), DASHBOARD_KEY);
         contentPanel.add(new com.mypos.product.view.ProductPanel(), PRODUCT_KEY);
         contentPanel.add(new com.mypos.cashier.view.CashierPanel(), CASHIER_KEY);
         contentPanel.add(new com.mypos.sales.view.SalesPanel(), SALES_KEY);
+        contentPanel.add(new com.mypos.auth.view.UserManagementPanel(), USERS_KEY);
 
         // --- Show the Dashboard by default ---
         cardLayout.show(contentPanel, DASHBOARD_KEY);
@@ -110,6 +112,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         AddUsers.setText("Add Users");
         AddUsers.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        AddUsers.addActionListener(this::AddUsersActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -199,6 +202,10 @@ public class MainFrame extends javax.swing.JFrame {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         cardLayout.show(contentPanel, "CASHIER");
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void AddUsersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddUsersActionPerformed
+        cardLayout.show(contentPanel, "USERS");
+    }//GEN-LAST:event_AddUsersActionPerformed
 
     /**
      * @param args the command line arguments
