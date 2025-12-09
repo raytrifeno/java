@@ -31,18 +31,20 @@ public class CashierPanel extends javax.swing.JPanel {
         jTextField1 = new javax.swing.JTextField();
         jButton5 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        CancelSale = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        CheckoutPayment = new javax.swing.JButton();
+        DeleteItem = new javax.swing.JButton();
+        Receipt = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1030, 670));
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel2.setText("CASHIER");
 
         jTextField1.setBackground(new java.awt.Color(204, 204, 255));
+        jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         jTextField1.setForeground(new java.awt.Color(102, 102, 102));
         jTextField1.setText("Input barcode..");
         jTextField1.addActionListener(this::jTextField1ActionPerformed);
@@ -51,15 +53,16 @@ public class CashierPanel extends javax.swing.JPanel {
         jButton5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton5.addActionListener(this::jButton5ActionPerformed);
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 2, 18)); // NOI18N
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-admin-24.png"))); // NOI18N
         jLabel4.setText("ADMIN");
         jLabel4.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
-        jButton1.setBackground(new java.awt.Color(255, 51, 51));
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Report");
-        jButton1.addActionListener(this::jButton1ActionPerformed);
+        CancelSale.setBackground(new java.awt.Color(255, 255, 204));
+        CancelSale.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        CancelSale.setForeground(new java.awt.Color(102, 102, 0));
+        CancelSale.setText("Cancel");
+        CancelSale.addActionListener(this::CancelSaleActionPerformed);
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -80,40 +83,49 @@ public class CashierPanel extends javax.swing.JPanel {
         jTable2.setShowGrid(false);
         jScrollPane2.setViewportView(jTable2);
 
-        jButton2.setBackground(new java.awt.Color(153, 153, 255));
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Summary");
+        CheckoutPayment.setBackground(new java.awt.Color(204, 255, 204));
+        CheckoutPayment.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        CheckoutPayment.setForeground(new java.awt.Color(0, 153, 51));
+        CheckoutPayment.setText("Checkout");
+        CheckoutPayment.addActionListener(this::CheckoutPaymentActionPerformed);
 
-        jButton3.setBackground(new java.awt.Color(255, 51, 51));
-        jButton3.setForeground(new java.awt.Color(255, 255, 255));
-        jButton3.setText("Delete");
-        jButton3.addActionListener(this::jButton3ActionPerformed);
+        DeleteItem.setBackground(new java.awt.Color(255, 204, 204));
+        DeleteItem.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        DeleteItem.setForeground(new java.awt.Color(204, 0, 0));
+        DeleteItem.setText("Delete");
+        DeleteItem.addActionListener(this::DeleteItemActionPerformed);
+
+        Receipt.setBackground(new java.awt.Color(204, 204, 255));
+        Receipt.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        Receipt.setForeground(new java.awt.Color(102, 102, 255));
+        Receipt.setText("Receipt");
+        Receipt.addActionListener(this::ReceiptActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(23, 23, 23)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(DeleteItem, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(CancelSale, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(41, 41, 41)
+                        .addComponent(CheckoutPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 980, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(23, 23, 23)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel4))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 980, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton2)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(Receipt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(27, 27, 27))
         );
         layout.setVerticalGroup(
@@ -124,17 +136,18 @@ public class CashierPanel extends javax.swing.JPanel {
                     .addComponent(jLabel2)
                     .addComponent(jLabel4))
                 .addGap(26, 26, 26)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(27, 27, 27)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(179, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextField1)
+                    .addComponent(Receipt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(CancelSale, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(CheckoutPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(DeleteItem, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -146,11 +159,31 @@ public class CashierPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void CancelSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelSaleActionPerformed
+        // Cari parent window (bisa JFrame atau JDialog)
+            java.awt.Window parentWindow = javax.swing.SwingUtilities.getWindowAncestor(this);
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+            // Buat dialog AddProduct (modal = true)
+            CancelSales dialog = new CancelSales((java.awt.Frame) parentWindow, true);
+
+            // Tampilkan dialog
+            dialog.setLocationRelativeTo(parentWindow); // Supaya muncul di tengah
+            dialog.setVisible(true);
+    }//GEN-LAST:event_CancelSaleActionPerformed
+    
+    private void CheckoutPaymentActionPerformed(java.awt.event.ActionEvent evt) {                                           
+        // Cari parent window (bisa JFrame atau JDialog)
+            java.awt.Window parentWindow = javax.swing.SwingUtilities.getWindowAncestor(this);
+
+            // Buat dialog AddProduct (modal = true)
+            CheckoutPayment dialog = new CheckoutPayment((java.awt.Frame) parentWindow, true);
+
+            // Tampilkan dialog
+            dialog.setLocationRelativeTo(parentWindow); // Supaya muncul di tengah
+            dialog.setVisible(true);
+    }
+    
+    private void DeleteItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteItemActionPerformed
          int selectedRow = jTable2.getSelectedRow();
 
     if (selectedRow == -1) {
@@ -167,7 +200,11 @@ public class CashierPanel extends javax.swing.JPanel {
             (javax.swing.table.DefaultTableModel) jTable2.getModel();
 
     model.removeRow(selectedRow);
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_DeleteItemActionPerformed
+
+    private void ReceiptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ReceiptActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ReceiptActionPerformed
     // === GETTER SEDERHANA ===
     public javax.swing.JTextField getTxtBarcode() {
         return jTextField1;
@@ -220,9 +257,10 @@ public class CashierPanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton CancelSale;
+    private javax.swing.JButton CheckoutPayment;
+    private javax.swing.JButton DeleteItem;
+    private javax.swing.JButton Receipt;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;

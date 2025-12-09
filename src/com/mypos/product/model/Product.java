@@ -1,6 +1,6 @@
 package com.mypos.product.model;
 
-package com.mypos.cashier.model;
+//package com.mypos.cashier.model;
 
 public class Product {
 
