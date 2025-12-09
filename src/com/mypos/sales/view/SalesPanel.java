@@ -39,15 +39,15 @@ public class SalesPanel extends javax.swing.JPanel {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Id Transaction", "Id Sale", "Total Amount", "Amount Paid", "Sale Datetime", "Create At"
+                "Id Transaction", "Id Sale", "Receipt Number", "Total Amount", "Amount Paid", "Change Amount", "Sale Datetime"
             }
         ));
         jTable1.setPreferredSize(new java.awt.Dimension(800, 700));

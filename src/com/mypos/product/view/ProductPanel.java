@@ -27,41 +27,45 @@ public class ProductPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton8 = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
+        InputProduct = new javax.swing.JTextField();
+        SearchProduct = new javax.swing.JButton();
+        CategorySelect = new javax.swing.JComboBox<>();
+        AddProduct = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
 
         setPreferredSize(new java.awt.Dimension(1030, 670));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel2.setText("PRODUCT");
 
-        jTextField1.setBackground(new java.awt.Color(153, 153, 255));
-        jTextField1.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField1.setText("Search a product...");
+        InputProduct.setBackground(new java.awt.Color(204, 204, 255));
+        InputProduct.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        InputProduct.setForeground(new java.awt.Color(102, 102, 102));
+        InputProduct.setText("Search a product...");
 
-        jButton8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-search-30.png"))); // NOI18N
-        jButton8.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton8.addActionListener(this::jButton8ActionPerformed);
+        SearchProduct.setBackground(new java.awt.Color(204, 204, 255));
+        SearchProduct.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-search-30.png"))); // NOI18N
+        SearchProduct.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        SearchProduct.addActionListener(this::SearchProductActionPerformed);
 
-        jComboBox1.setBackground(new java.awt.Color(153, 153, 255));
-        jComboBox1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jComboBox1.setForeground(new java.awt.Color(255, 255, 255));
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All Product", "Item 2", "Item 3", "Item 4" }));
-        jComboBox1.setToolTipText("AllProduct");
-        jComboBox1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jComboBox1.setFocusCycleRoot(true);
-        jComboBox1.addActionListener(this::jComboBox1ActionPerformed);
+        CategorySelect.setBackground(new java.awt.Color(153, 153, 255));
+        CategorySelect.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        CategorySelect.setForeground(new java.awt.Color(255, 255, 255));
+        CategorySelect.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All Product", "Grocery", "Drinks", "Snacks", "Care", "Cleaning", "Health", "Baby", "Tobacco", "General" }));
+        CategorySelect.setToolTipText("AllProduct");
+        CategorySelect.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        CategorySelect.setFocusCycleRoot(true);
+        CategorySelect.addActionListener(this::CategorySelectActionPerformed);
 
-        jButton1.setBackground(new java.awt.Color(153, 153, 255));
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Add Product");
-        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton1.addActionListener(this::jButton1ActionPerformed);
+        AddProduct.setBackground(new java.awt.Color(153, 153, 255));
+        AddProduct.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        AddProduct.setForeground(new java.awt.Color(255, 255, 255));
+        AddProduct.setText("Add Product");
+        AddProduct.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        AddProduct.addActionListener(this::AddProductActionPerformed);
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -85,6 +89,12 @@ public class ProductPanel extends javax.swing.JPanel {
         jLabel4.setText("ADMIN");
         jLabel4.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
+        jComboBox1.setBackground(new java.awt.Color(153, 153, 255));
+        jComboBox1.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        jComboBox1.setForeground(new java.awt.Color(255, 255, 255));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Stock < 10", "Stock < 25", "Stock < 50" }));
+        jComboBox1.addActionListener(this::jComboBox1ActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -98,14 +108,15 @@ public class ProductPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel4))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(InputProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 449, Short.MAX_VALUE)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(6, 6, 6)))
+                        .addComponent(SearchProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 306, Short.MAX_VALUE)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(32, 32, 32)
+                        .addComponent(CategorySelect, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30)
+                        .addComponent(AddProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(19, 19, 19))
         );
         layout.setVerticalGroup(
@@ -118,37 +129,51 @@ public class ProductPanel extends javax.swing.JPanel {
                 .addGap(25, 25, 25)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(AddProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(CategorySelect, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(InputProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(SearchProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
                 .addGap(94, 94, 94))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void CategorySelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CategorySelectActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CategorySelectActionPerformed
+
+    private void AddProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddProductActionPerformed
+            // Cari parent window (bisa JFrame atau JDialog)
+            java.awt.Window parentWindow = javax.swing.SwingUtilities.getWindowAncestor(this);
+
+            // Buat dialog AddProduct (modal = true)
+            AddProduct dialog = new AddProduct((java.awt.Frame) parentWindow, true);
+
+            // Tampilkan dialog
+            dialog.setLocationRelativeTo(parentWindow); // Supaya muncul di tengah
+            dialog.setVisible(true);
+    }//GEN-LAST:event_AddProductActionPerformed
+
+    private void SearchProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchProductActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_SearchProductActionPerformed
+
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton8ActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton8;
+    private javax.swing.JButton AddProduct;
+    private javax.swing.JComboBox<String> CategorySelect;
+    private javax.swing.JTextField InputProduct;
+    private javax.swing.JButton SearchProduct;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }
