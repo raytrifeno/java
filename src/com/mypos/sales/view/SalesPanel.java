@@ -4,17 +4,47 @@
  */
 package com.mypos.sales.view;
 
+import com.mypos.sales.model.Sale;
+import com.mypos.sales.model.SalesSummary;
+import com.mypos.sales.service.SalesService;
+import com.mypos.store.dao.StoreDao;
+import com.mypos.store.dao.StoreDaoImpl;
+import com.mypos.store.model.Store;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.io.File;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Locale;
+
 /**
  *
  * @author USER
  */
+
 public class SalesPanel extends javax.swing.JPanel {
 
     /**
      * Creates new form SalesPanel
      */
+    
+    private final SalesService salesService = new SalesService();
+    private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private final NumberFormat currencyFmt = NumberFormat.getCurrencyInstance(new Locale("id","ID"));
+    
     public SalesPanel() {
         initComponents();
+        // load default (Today)
+        IntervalSales.setSelectedItem("Today");
+        loadSalesData();
     }
 
     /**
@@ -27,69 +57,73 @@ public class SalesPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        SalesTable = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
+        IntervalSales = new javax.swing.JComboBox<>();
+        ExportSales = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1030, 670));
 
         jScrollPane2.setPreferredSize(new java.awt.Dimension(800, 700));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        SalesTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+
             },
             new String [] {
-                "Id Transaction", "Id Sale", "Receipt Number", "Total Amount", "Amount Paid", "Change Amount", "Sale Datetime"
+                "Id Transaction", "Id User", "Receipt Number", "Total Amount", "Amount Paid", "Change Amount", "Sale Datetime"
             }
-        ));
-        jTable1.setPreferredSize(new java.awt.Dimension(800, 700));
-        jScrollPane2.setViewportView(jTable1);
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class, java.lang.Float.class, java.lang.Float.class, java.lang.Float.class, java.lang.Object.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        SalesTable.setPreferredSize(new java.awt.Dimension(800, 700));
+        jScrollPane2.setViewportView(SalesTable);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel2.setText("TRANSACTION");
 
-        jComboBox1.setBackground(new java.awt.Color(153, 153, 255));
-        jComboBox1.setForeground(new java.awt.Color(255, 255, 255));
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Today", "Weekly", "Monthly", "All Time" }));
-        jComboBox1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        IntervalSales.setBackground(new java.awt.Color(153, 153, 255));
+        IntervalSales.setForeground(new java.awt.Color(255, 255, 255));
+        IntervalSales.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Today", "Weekly", "Monthly", "All Time" }));
+        IntervalSales.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        IntervalSales.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                IntervalSalesActionPerformed(evt);
             }
         });
 
-        jButton1.setBackground(new java.awt.Color(153, 153, 255));
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("EXPORT PDF");
-        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        ExportSales.setBackground(new java.awt.Color(153, 153, 255));
+        ExportSales.setForeground(new java.awt.Color(255, 255, 255));
+        ExportSales.setText("EXPORT PDF");
+        ExportSales.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        ExportSales.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ExportSalesActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(14, 14, 14)
+                .addGap(23, 23, 23)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1010, Short.MAX_VALUE)
-                        .addContainerGap())
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 988, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addGap(19, 19, 19))))
+                        .addComponent(ExportSales)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(IntervalSales, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(19, 19, 19))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -98,24 +132,198 @@ public class SalesPanel extends javax.swing.JPanel {
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(IntervalSales, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ExportSales, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, 27)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 480, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    private void IntervalSalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IntervalSalesActionPerformed
+        loadSalesData();
+    }//GEN-LAST:event_IntervalSalesActionPerformed
 
+    private void ExportSalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExportSalesActionPerformed
+        new Thread(() -> {
+            try {
+                String interval = (String) IntervalSales.getSelectedItem();
+                List<Sale> list = salesService.getSalesByInterval(interval);
+                exportSalesListToPdf(list, interval);
+                SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(this, "Export PDF selesai. Cek folder Downloads.", "Sukses", JOptionPane.INFORMATION_MESSAGE));
+            } catch (Exception e) {
+                e.printStackTrace();
+                SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(this, "Gagal export PDF:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE));
+            }
+        }).start();
+    }//GEN-LAST:event_ExportSalesActionPerformed
+    
+    private void loadSalesData() {
+        SwingUtilities.invokeLater(() -> {
+            DefaultTableModel model = (DefaultTableModel) SalesTable.getModel();
+            model.setRowCount(0);
+            String interval = (String) IntervalSales.getSelectedItem();
+            try {
+                List<Sale> list = salesService.getSalesByInterval(interval);
+                for (Sale s : list) {
+                    Object[] row = new Object[] {
+                        s.getId(),
+                        s.getUserId(),
+                        s.getReceiptNumber(),
+                        formatCurrency(s.getTotalAmount()),
+                        formatCurrency(s.getAmountPaid()),
+                        formatCurrency(s.getChangeAmount()),
+                        s.getSaleDate() == null ? "" : s.getSaleDate().format(dtf)
+                    };
+                    model.addRow(row);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Gagal memuat data sales:\n" + ex.getMessage(), "DB Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+    }
+    
+    private void exportSalesListToPdf(List<Sale> list, String interval) throws Exception {
+        if (list == null || list.isEmpty()) throw new Exception("Tidak ada data untuk diexport.");
+
+        StoreDao storeDao = new StoreDaoImpl();
+        Store store = storeDao.getStoreInfo();
+        SalesSummary summary = salesService.getSummaryByInterval(interval);
+
+        PDDocument doc = new PDDocument();
+        PDPage page = new PDPage();
+        doc.addPage(page);
+
+        PDPageContentStream cs = new PDPageContentStream(doc, page);
+        float margin = 50;
+        float yStart = 760;
+        float y = yStart;
+        float leading = 16;
+
+        // HEADER
+        cs.beginText();
+        cs.setFont(PDType1Font.HELVETICA_BOLD, 16);
+        cs.newLineAtOffset(margin, y);
+        cs.showText(store != null && store.getName() != null ? store.getName() : "STORE NAME");
+        cs.endText();
+        y -= leading;
+
+        cs.beginText();
+        cs.setFont(PDType1Font.HELVETICA, 10);
+        cs.newLineAtOffset(margin, y);
+        cs.showText(store != null && store.getAddress() != null ? store.getAddress() : "STORE ADDRESS");
+        cs.endText();
+        y -= leading;
+
+        cs.beginText();
+        cs.newLineAtOffset(margin, y);
+        cs.showText("Telp: " + (store != null && store.getPhone() != null ? store.getPhone() : "-"));
+        cs.endText();
+        y -= leading;
+
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        cs.beginText();
+        cs.newLineAtOffset(margin, y);
+        cs.showText("Periode: " + interval + "    Export: " + timestamp);
+        cs.endText();
+        y -= leading * 1.2;
+
+        // TABLE HEADER
+        cs.beginText();
+        cs.setFont(PDType1Font.HELVETICA_BOLD, 10);
+        cs.newLineAtOffset(margin, y);
+        cs.showText(String.format("%-4s %-6s %-20s %-12s %-12s %-12s %-20s",
+                "No","User","Receipt","Total","Paid","Change","Sale Date"));
+        cs.endText();
+        y -= leading;
+
+        cs.setFont(PDType1Font.HELVETICA, 9);
+
+        int no = 1;
+        for (Sale s : list) {
+            if (y < 90) {
+                cs.close();
+                page = new PDPage();
+                doc.addPage(page);
+                cs = new PDPageContentStream(doc, page);
+                y = yStart;
+            }
+
+            String line = String.format("%-4d %-6s %-20s %-12s %-12s %-12s %-20s",
+                    no++,
+                    s.getUserId(),
+                    truncate(s.getReceiptNumber(), 20),
+                    formatCurrencySimple(s.getTotalAmount()),
+                    formatCurrencySimple(s.getAmountPaid()),
+                    formatCurrencySimple(s.getChangeAmount()),
+                    s.getSaleDate() == null ? "" : s.getSaleDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+            );
+
+            cs.beginText();
+            cs.newLineAtOffset(margin, y);
+            cs.showText(line);
+            cs.endText();
+            y -= leading;
+        }
+
+        // FOOTER / SUMMARY
+        y -= leading;
+        cs.beginText();
+        cs.setFont(PDType1Font.HELVETICA_BOLD, 12);
+        cs.newLineAtOffset(margin, y);
+        cs.showText("SUMMARY");
+        cs.endText();
+        y -= leading;
+
+        cs.setFont(PDType1Font.HELVETICA, 10);
+        cs.beginText(); cs.newLineAtOffset(margin, y); cs.showText("Total Transactions : " + summary.getTotalTransactions()); cs.endText(); y -= leading;
+        cs.beginText(); cs.newLineAtOffset(margin, y); cs.showText("Total Amount       : " + formatCurrency(summary.getTotalAmount())); cs.endText(); y -= leading;
+        cs.beginText(); cs.newLineAtOffset(margin, y); cs.showText("Total Paid         : " + formatCurrency(summary.getTotalPaid())); cs.endText(); y -= leading;
+        cs.beginText(); cs.newLineAtOffset(margin, y); cs.showText("Total Change       : " + formatCurrency(summary.getTotalChange())); cs.endText();
+
+        cs.close();
+
+        // save
+        File downloads = getDownloadsFolder();
+        if (!downloads.exists()) downloads.mkdirs();
+        String fileName = "Laporan_Penjualan_" + timestamp.replace(":", "-") + ".pdf";
+        File out = new File(downloads, fileName);
+        doc.save(out);
+        doc.close();
+
+        System.out.println("Saved PDF to: " + out.getAbsolutePath());
+    }
+    
+    private String truncate(String s, int max) {
+        if (s == null) return "";
+        return s.length() <= max ? s : s.substring(0, max-3) + "...";
+    }
+
+    private File getDownloadsFolder() {
+        String userHome = System.getProperty("user.home");
+        File downloads = new File(userHome, "Downloads");
+        if (downloads.exists() && downloads.isDirectory()) return downloads;
+        return new File(userHome);
+    }
+
+    private String formatCurrency(BigDecimal value) {
+        if (value == null) return currencyFmt.format(0);
+        return currencyFmt.format(value);
+    }
+
+    // smaller version without currency symbol for table alignment
+    private String formatCurrencySimple(BigDecimal value) {
+        if (value == null) return "0";
+        return value.toPlainString();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JButton ExportSales;
+    private javax.swing.JComboBox<String> IntervalSales;
+    private javax.swing.JTable SalesTable;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
+
 }
