@@ -46,8 +46,8 @@ public class ProductDao {
     }
     
     /**
-     * Adds a new product to the database.
-     * * @param product The Product object to add.
+     * Adds a new product to the database. 
+     * @param product
      * @return true if the product was added successfully, false otherwise.
      */
     public boolean addProduct(Product product) {
@@ -97,6 +97,26 @@ public class ProductDao {
             
         } catch (SQLException e) {
             System.err.println("Error deleting product: " + e.getMessage());
+            return false;
+        }
+    }
+    // Tambahkan ini di ProductDao.java
+    public boolean updateProduct(com.mypos.product.model.Product product) {
+        String sql = "UPDATE products SET name=?, category=?, price=?, stock=? WHERE code=?";
+        try (java.sql.Connection conn = com.mypos.config.connectDB.getConnection();
+             java.sql.PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, product.getName());
+            pstmt.setString(2, product.getCategory());
+            pstmt.setBigDecimal(3, product.getPrice());
+            pstmt.setInt(4, product.getStock());
+            pstmt.setString(5, product.getCode()); // ID/Code sebagai kunci update
+            
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+            
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }

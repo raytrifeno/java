@@ -4,6 +4,8 @@
  */
 package com.mypos.product.view;
 
+import java.awt.HeadlessException;
+
 /**
  *
  * @author raysu
@@ -19,26 +21,65 @@ public class ProductPanel extends javax.swing.JPanel {
     }
     
     private void loadData() {
-         com.mypos.product.dao.ProductDao productDao = new com.mypos.product.dao.ProductDao();
-         java.util.List<com.mypos.product.model.Product> products = productDao.getAllProducts();
-    
-         // Get the table model from the JTable created by the GUI builder
-         javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable2.getModel();
-    
-         // Clear any existing rows
-         model.setRowCount(0);
-   
-        // Loop through the list of products and add them to the table model
+// 1. Ambil nilai filter yang sedang dipilih user
+        String selectedCategory = (CategoryFilter.getSelectedItem() != null) 
+                                  ? CategoryFilter.getSelectedItem().toString() 
+                                  : "All Product";
+        
+        String selectedStock = (StockFilter.getSelectedItem() != null) 
+                               ? StockFilter.getSelectedItem().toString() 
+                               : "All Stock"; // Pastikan di Design item pertama adalah "All Stock" atau tangani logicnya
+
+        // 2. Ambil semua data dari Database
+        com.mypos.product.dao.ProductDao productDao = new com.mypos.product.dao.ProductDao();
+        java.util.List<com.mypos.product.model.Product> products = productDao.getAllProducts();
+
+        // 3. Siapkan Tabel
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable2.getModel();
+        model.setRowCount(0); // Bersihkan tabel
+
+        // 4. Looping & Filtering Logic
         for (com.mypos.product.model.Product product : products) {
-            model.addRow(new Object[]{
-                product.getCode(),       // "ID Produk"
-                product.getName(),       // "Name Product"
-                product.getCategory(),   // "Category"
-                product.getPrice(),      // "Price"
-                product.getStock(),      // "Stock"
-                product.getCreatedAt(),  // "Create At"
-                product.getUpdatedAt()   // "Update At"
-            });
+            
+            // --- Logic Filter Category ---
+            boolean categoryMatch = false;
+            if (selectedCategory.equals("All Product")) {
+                categoryMatch = true;
+            } else if (product.getCategory().equalsIgnoreCase(selectedCategory)) {
+                categoryMatch = true;
+            }
+
+            // --- Logic Filter Stock ---
+            boolean stockMatch = false;
+            int stock = product.getStock();
+            
+            // Logic ini menyesuaikan dengan Item di ComboBox StockFilter Anda
+            if (selectedStock.startsWith("Stock < 10") && stock < 10) {
+                stockMatch = true;
+            } else if (selectedStock.startsWith("Stock < 25") && stock < 25) {
+                stockMatch = true;
+            } else if (selectedStock.startsWith("Stock < 50") && stock < 50) {
+                stockMatch = true;
+            } else if (selectedStock.equals("All Stock") || selectedStock.equals("Stock")) { 
+                // Asumsi jika user belum pilih atau ada opsi 'All Stock'
+                stockMatch = true; 
+            }
+            // PENTING: Karena di kode awal Anda tidak ada opsi "All Stock", 
+            // jika user memilih filter stock, data akan selalu terfilter.
+            // Sebaiknya tambahkan item "All Stock" di properti model ComboBox StockFilter Anda.
+
+            // 5. Masukkan ke tabel HANYA JIKA kedua filter cocok
+            if (categoryMatch && stockMatch) {
+                model.addRow(new Object[]{
+                    product.getCode(),
+                    product.getName(),
+                    product.getCategory(),
+                    product.getPrice(),
+                    product.getStock(),
+                    product.getCreatedAt(),
+                    product.getUpdatedAt()
+                });
+            }
         }
    }
     /**
@@ -107,19 +148,21 @@ public class ProductPanel extends javax.swing.JPanel {
         StockFilter.setBackground(new java.awt.Color(204, 204, 255));
         StockFilter.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         StockFilter.setForeground(new java.awt.Color(102, 102, 255));
-        StockFilter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Stock < 10", "Stock < 25", "Stock < 50" }));
+        StockFilter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All Stock", "Stock < 10", "Stock < 25", "Stock < 50" }));
         StockFilter.addActionListener(this::StockFilterActionPerformed);
 
         EditProduct.setBackground(new java.awt.Color(204, 255, 204));
         EditProduct.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         EditProduct.setForeground(new java.awt.Color(0, 102, 0));
         EditProduct.setText("Edit");
+        EditProduct.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         EditProduct.addActionListener(this::EditProductActionPerformed);
 
         DeleteProduct.setBackground(new java.awt.Color(255, 204, 204));
         DeleteProduct.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         DeleteProduct.setForeground(new java.awt.Color(204, 0, 0));
         DeleteProduct.setText("Delete");
+        DeleteProduct.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         DeleteProduct.addActionListener(this::DeleteProductActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -173,7 +216,7 @@ public class ProductPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void CategoryFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CategoryFilterActionPerformed
-        // TODO add your handling code here:
+        loadData();
     }//GEN-LAST:event_CategoryFilterActionPerformed
 
     private void AddProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddProductActionPerformed
@@ -224,19 +267,59 @@ public class ProductPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_SearchProductActionPerformed
 
     private void StockFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StockFilterActionPerformed
-        // TODO add your handling code here:
+        loadData();
     }//GEN-LAST:event_StockFilterActionPerformed
 
     private void EditProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditProductActionPerformed
-            // Cari parent window (bisa JFrame atau JDialog)
-            java.awt.Window parentWindow = javax.swing.SwingUtilities.getWindowAncestor(this);
+// 1. CEK: User harus pilih baris dulu
+        int selectedRow = jTable2.getSelectedRow();
+        if (selectedRow == -1) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Pilih produk yang mau diedit!", "Warning", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-            // Buat dialog AddProduct (modal = true)
-            UpdateProduct dialog = new UpdateProduct((java.awt.Frame) parentWindow, true);
+        // 2. AMBIL DATA DARI TABEL
+        // Pastikan urutan ini sesuai dengan kolom di tabel Anda (0=ID, 1=Nama, dst)
+        String code = jTable2.getValueAt(selectedRow, 0).toString();
+        String name = jTable2.getValueAt(selectedRow, 1).toString();
+        String category = jTable2.getValueAt(selectedRow, 2).toString();
+        String price = jTable2.getValueAt(selectedRow, 3).toString();
+        String stock = jTable2.getValueAt(selectedRow, 4).toString();
 
-            // Tampilkan dialog
-            dialog.setLocationRelativeTo(parentWindow); // Supaya muncul di tengah
-            dialog.setVisible(true);
+        // 3. SIAPKAN DIALOG UPDATE
+        java.awt.Window parent = javax.swing.SwingUtilities.getWindowAncestor(this);
+        UpdateProduct dialog = new UpdateProduct((java.awt.Frame) parent, true);
+        
+        // Isi form dialog dengan data yang diambil tadi
+        dialog.setProductData(code, name, category, price, stock);
+        
+        // Tampilkan dialog
+        dialog.setVisible(true);
+
+        // 4. EKSEKUSI UPDATE (Jika user klik Save)
+        if (dialog.isConfirmed()) {
+            try {
+                // Buat objek product baru dengan data hasil editan
+                com.mypos.product.model.Product p = new com.mypos.product.model.Product();
+                p.setCode(dialog.getProductCode());      // ID (tidak berubah)
+                p.setName(dialog.getProductName());      // Nama baru
+                p.setCategory(dialog.getProductCategory()); // Kategori baru
+                p.setPrice(new java.math.BigDecimal(dialog.getProductPrice())); // Harga baru
+                p.setStock(Integer.parseInt(dialog.getProductStock())); // Stok baru
+
+                // Panggil DAO untuk update ke database
+                com.mypos.product.dao.ProductDao dao = new com.mypos.product.dao.ProductDao();
+                if (dao.updateProduct(p)) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Data berhasil diupdate!");
+                    loadData(); // Refresh tabel biar perubahannya muncul
+                } else {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Gagal update data.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (HeadlessException | NumberFormatException e) {
+                 javax.swing.JOptionPane.showMessageDialog(this, "Format angka salah: " + e.getMessage());
+            }
+        }
     }//GEN-LAST:event_EditProductActionPerformed
 
     private void InputProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputProductActionPerformed

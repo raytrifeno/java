@@ -60,12 +60,14 @@ public class DeleteProduct extends javax.swing.JDialog {
         cancel.setForeground(new java.awt.Color(0, 153, 0));
         cancel.setText("Cancel");
         cancel.setToolTipText("");
+        cancel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         cancel.addActionListener(this::cancelActionPerformed);
 
         Delete.setBackground(new java.awt.Color(255, 204, 204));
         Delete.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         Delete.setForeground(new java.awt.Color(255, 0, 0));
         Delete.setText("Delete");
+        Delete.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         Delete.addActionListener(this::DeleteActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

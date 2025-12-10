@@ -21,11 +21,12 @@ public class AddProduct extends javax.swing.JDialog {
     public AddProduct(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        setLocationRelativeTo(parent);
     }
 
          /**
           * Returns true if the user clicked the "Submit" button to close the dialog.
-          * @return boolean confirmation status.
+          * @return Boolean confirmation status.
           */
 public boolean isConfirmed() {
         return this.confirmed;
@@ -158,17 +159,17 @@ public boolean isConfirmed() {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(AddProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(53, 53, 53))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(197, 197, 197)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel6)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(185, 185, 185))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(37, 37, 37)
+                .addGap(47, 47, 47)
                 .addComponent(jLabel6)
-                .addGap(28, 28, 28)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(IdProduct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -216,7 +217,7 @@ public boolean isConfirmed() {
     }//GEN-LAST:event_CancelActionPerformed
 
     private void IdProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IdProductActionPerformed
-        NameProduct.requestFocus();
+        // TODO add your handling code here:
     }//GEN-LAST:event_IdProductActionPerformed
 
     private void NameProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NameProductActionPerformed

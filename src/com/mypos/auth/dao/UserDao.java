@@ -21,7 +21,7 @@ public class UserDao {
      * comparing it with the stored hash in the database.
      * 
      * @param username The user's username.
-     * @param rawPassword The user's raw, unhashed password.
+     * @param rawPassword The user's raw, uncashed password.
      * @return A User object if authentication is successful, otherwise null.
      */
     public User authenticate(String username, String rawPassword) {
