@@ -28,30 +28,30 @@ public class CashierPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton5 = new javax.swing.JButton();
+        InputBarcode = new javax.swing.JTextField();
+        ScanBtn = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         CancelSale = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
-        CheckoutPayment = new javax.swing.JButton();
+        CheckoutSale = new javax.swing.JButton();
         DeleteItem = new javax.swing.JButton();
-        Receipt = new javax.swing.JButton();
+        ReceiptNotes = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1030, 670));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel2.setText("CASHIER");
 
-        jTextField1.setBackground(new java.awt.Color(204, 204, 255));
-        jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
-        jTextField1.setForeground(new java.awt.Color(102, 102, 102));
-        jTextField1.setText("Input barcode..");
-        jTextField1.addActionListener(this::jTextField1ActionPerformed);
+        InputBarcode.setBackground(new java.awt.Color(204, 204, 255));
+        InputBarcode.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        InputBarcode.setForeground(new java.awt.Color(102, 102, 102));
+        InputBarcode.setText("Input barcode..");
+        InputBarcode.addActionListener(this::InputBarcodeActionPerformed);
 
-        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-qr-code-48.png"))); // NOI18N
-        jButton5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton5.addActionListener(this::jButton5ActionPerformed);
+        ScanBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-qr-code-48.png"))); // NOI18N
+        ScanBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        ScanBtn.addActionListener(this::ScanBtnActionPerformed);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 2, 18)); // NOI18N
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-admin-24.png"))); // NOI18N
@@ -83,11 +83,11 @@ public class CashierPanel extends javax.swing.JPanel {
         jTable2.setShowGrid(false);
         jScrollPane2.setViewportView(jTable2);
 
-        CheckoutPayment.setBackground(new java.awt.Color(204, 255, 204));
-        CheckoutPayment.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        CheckoutPayment.setForeground(new java.awt.Color(0, 153, 51));
-        CheckoutPayment.setText("Checkout");
-        CheckoutPayment.addActionListener(this::CheckoutPaymentActionPerformed);
+        CheckoutSale.setBackground(new java.awt.Color(204, 255, 204));
+        CheckoutSale.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        CheckoutSale.setForeground(new java.awt.Color(0, 153, 51));
+        CheckoutSale.setText("Checkout");
+        CheckoutSale.addActionListener(this::CheckoutPaymentActionPerformed);
 
         DeleteItem.setBackground(new java.awt.Color(255, 204, 204));
         DeleteItem.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -95,11 +95,11 @@ public class CashierPanel extends javax.swing.JPanel {
         DeleteItem.setText("Delete");
         DeleteItem.addActionListener(this::DeleteItemActionPerformed);
 
-        Receipt.setBackground(new java.awt.Color(204, 204, 255));
-        Receipt.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        Receipt.setForeground(new java.awt.Color(102, 102, 255));
-        Receipt.setText("Receipt");
-        Receipt.addActionListener(this::ReceiptActionPerformed);
+        ReceiptNotes.setBackground(new java.awt.Color(204, 204, 255));
+        ReceiptNotes.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        ReceiptNotes.setForeground(new java.awt.Color(102, 102, 255));
+        ReceiptNotes.setText("Receipt");
+        ReceiptNotes.addActionListener(this::ReceiptNotesActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -113,19 +113,19 @@ public class CashierPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(CancelSale, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(41, 41, 41)
-                        .addComponent(CheckoutPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(CheckoutSale, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 980, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(InputBarcode, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(ScanBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(Receipt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(ReceiptNotes, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(27, 27, 27))
         );
         layout.setVerticalGroup(
@@ -137,27 +137,27 @@ public class CashierPanel extends javax.swing.JPanel {
                     .addComponent(jLabel4))
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1)
-                    .addComponent(Receipt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(ScanBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(InputBarcode)
+                    .addComponent(ReceiptNotes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(CancelSale, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(CheckoutPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(CheckoutSale, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(DeleteItem, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void InputBarcodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputBarcodeActionPerformed
        scanBarcode();
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_InputBarcodeActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void ScanBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ScanBtnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_ScanBtnActionPerformed
 
     private void CancelSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelSaleActionPerformed
         // Cari parent window (bisa JFrame atau JDialog)
@@ -202,12 +202,19 @@ public class CashierPanel extends javax.swing.JPanel {
     model.removeRow(selectedRow);
     }//GEN-LAST:event_DeleteItemActionPerformed
 
-    private void ReceiptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ReceiptActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_ReceiptActionPerformed
+    private void ReceiptNotesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ReceiptNotesActionPerformed
+            java.awt.Window parentWindow = javax.swing.SwingUtilities.getWindowAncestor(this);
+
+            // Buat dialog AddProduct (modal = true)
+            ReceiptSale dialog = new ReceiptSale((java.awt.Frame) parentWindow, true);
+
+            // Tampilkan dialog
+            dialog.setLocationRelativeTo(parentWindow); // Supaya muncul di tengah
+            dialog.setVisible(true);
+    }//GEN-LAST:event_ReceiptNotesActionPerformed
     // === GETTER SEDERHANA ===
     public javax.swing.JTextField getTxtBarcode() {
-        return jTextField1;
+        return InputBarcode;
     }
     
     public javax.swing.JTable getTableCart() {
@@ -215,7 +222,7 @@ public class CashierPanel extends javax.swing.JPanel {
     }
     
     private void scanBarcode() {
-    String barcode = jTextField1.getText().trim();
+    String barcode = InputBarcode.getText().trim();
     
     if (barcode.isEmpty()) {
         javax.swing.JOptionPane.showMessageDialog(this, 
@@ -249,8 +256,8 @@ public class CashierPanel extends javax.swing.JPanel {
     model.addRow(row);
 
     // kosongkan input
-    jTextField1.setText("");
-    jTextField1.requestFocus();
+    InputBarcode.setText("");
+    InputBarcode.requestFocus();
 }
 
     
@@ -258,14 +265,14 @@ public class CashierPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton CancelSale;
-    private javax.swing.JButton CheckoutPayment;
+    private javax.swing.JButton CheckoutSale;
     private javax.swing.JButton DeleteItem;
-    private javax.swing.JButton Receipt;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JTextField InputBarcode;
+    private javax.swing.JButton ReceiptNotes;
+    private javax.swing.JButton ScanBtn;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }

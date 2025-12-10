@@ -36,24 +36,24 @@ public class ReceiptSale extends javax.swing.JDialog {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        SaveReceiptNote = new javax.swing.JButton();
+        PrintReceiptNote = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
+        TotalPriceLabel = new javax.swing.JLabel();
+        TotalAmountLabel = new javax.swing.JLabel();
+        ReturnTotalLabel = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
+        DateSaleLabel = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
-        jLabel16 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
+        NameStoreLabel = new javax.swing.JLabel();
+        AddressStoreLabel = new javax.swing.JLabel();
+        NoTelpLabel = new javax.swing.JLabel();
+        IdCashierLabel = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
-        jLabel19 = new javax.swing.JLabel();
+        IdTransactionLabel = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
         jDialog1.getContentPane().setLayout(jDialog1Layout);
@@ -76,30 +76,30 @@ public class ReceiptSale extends javax.swing.JDialog {
 
         jLabel4.setText("Amount          :");
 
-        jButton1.setBackground(new java.awt.Color(255, 255, 204));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(102, 102, 0));
-        jButton1.setText("SAVE");
-        jButton1.addActionListener(this::jButton1ActionPerformed);
+        SaveReceiptNote.setBackground(new java.awt.Color(255, 255, 204));
+        SaveReceiptNote.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        SaveReceiptNote.setForeground(new java.awt.Color(102, 102, 0));
+        SaveReceiptNote.setText("SAVE");
+        SaveReceiptNote.addActionListener(this::SaveReceiptNoteActionPerformed);
 
-        jButton2.setBackground(new java.awt.Color(204, 204, 255));
-        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(102, 102, 255));
-        jButton2.setText("PRINT");
-        jButton2.addActionListener(this::jButton2ActionPerformed);
+        PrintReceiptNote.setBackground(new java.awt.Color(204, 204, 255));
+        PrintReceiptNote.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        PrintReceiptNote.setForeground(new java.awt.Color(102, 102, 255));
+        PrintReceiptNote.setText("PRINT");
+        PrintReceiptNote.addActionListener(this::PrintReceiptNoteActionPerformed);
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
         jLabel6.setText("RECEIPT NOTES ");
 
-        jLabel5.setText("1000000,00");
+        TotalPriceLabel.setText("1000000,00");
 
-        jLabel7.setText("1200000,00");
+        TotalAmountLabel.setText("1200000,00");
 
-        jLabel8.setText("200000,00");
+        ReturnTotalLabel.setText("200000,00");
 
-        jLabel9.setText("Datetime        :");
+        jLabel9.setText("Datesale         :");
 
-        jLabel10.setText("08/09/2025");
+        DateSaleLabel.setText("08/09/2025");
 
         jLabel11.setText("ID Cashier      :");
 
@@ -109,17 +109,17 @@ public class ReceiptSale extends javax.swing.JDialog {
 
         jLabel14.setText("Address         :");
 
-        jLabel1.setText("Vendra POS ");
+        NameStoreLabel.setText("Vendra POS ");
 
-        jLabel15.setText("Jl. Maju Mundur");
+        AddressStoreLabel.setText("Jl. Maju Mundur");
 
-        jLabel16.setText("08567439265");
+        NoTelpLabel.setText("08567439265");
 
-        jLabel17.setText("001");
+        IdCashierLabel.setText("001");
 
         jLabel18.setText("ID Trx            :");
 
-        jLabel19.setText("001");
+        IdTransactionLabel.setText("001");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -129,18 +129,18 @@ public class ReceiptSale extends javax.swing.JDialog {
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(SaveReceiptNote, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel18)
                                 .addGap(18, 18, 18)
-                                .addComponent(jLabel19))
+                                .addComponent(IdTransactionLabel))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel9)
                                 .addGap(18, 18, 18)
-                                .addComponent(jLabel10)
+                                .addComponent(DateSaleLabel)
                                 .addGap(92, 92, 92)
                                 .addComponent(jLabel3))
                             .addGroup(layout.createSequentialGroup()
@@ -148,29 +148,29 @@ public class ReceiptSale extends javax.swing.JDialog {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel12)
                                         .addGap(18, 18, 18)
-                                        .addComponent(jLabel16)
+                                        .addComponent(NoTelpLabel)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(jLabel4))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel14)
                                         .addGap(18, 18, 18)
-                                        .addComponent(jLabel15)
+                                        .addComponent(AddressStoreLabel)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(jLabel2))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel13)
                                         .addGap(18, 18, 18)
-                                        .addComponent(jLabel1)
+                                        .addComponent(NameStoreLabel)
                                         .addGap(94, 94, 94)
                                         .addComponent(jLabel11)))
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel17)
-                                    .addComponent(jLabel5)
+                                    .addComponent(IdCashierLabel)
+                                    .addComponent(TotalPriceLabel)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel8)
-                                        .addComponent(jLabel7))))
-                            .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(ReturnTotalLabel)
+                                        .addComponent(TotalAmountLabel))))
+                            .addComponent(PrintReceiptNote, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 34, Short.MAX_VALUE))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -185,48 +185,48 @@ public class ReceiptSale extends javax.swing.JDialog {
                 .addGap(57, 57, 57)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel18)
-                    .addComponent(jLabel19))
+                    .addComponent(IdTransactionLabel))
                 .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel13)
-                    .addComponent(jLabel1)
+                    .addComponent(NameStoreLabel)
                     .addComponent(jLabel11)
-                    .addComponent(jLabel17))
+                    .addComponent(IdCashierLabel))
                 .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel14)
-                    .addComponent(jLabel15)
+                    .addComponent(AddressStoreLabel)
                     .addComponent(jLabel2)
-                    .addComponent(jLabel5))
+                    .addComponent(TotalPriceLabel))
                 .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
-                    .addComponent(jLabel16)
+                    .addComponent(NoTelpLabel)
                     .addComponent(jLabel4)
-                    .addComponent(jLabel7))
+                    .addComponent(TotalAmountLabel))
                 .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
-                    .addComponent(jLabel10)
+                    .addComponent(DateSaleLabel)
                     .addComponent(jLabel3)
-                    .addComponent(jLabel8))
+                    .addComponent(ReturnTotalLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(SaveReceiptNote, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(PrintReceiptNote, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(33, 33, 33))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void SaveReceiptNoteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveReceiptNoteActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_SaveReceiptNoteActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void PrintReceiptNoteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PrintReceiptNoteActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_PrintReceiptNoteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -266,27 +266,27 @@ public class ReceiptSale extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel AddressStoreLabel;
+    private javax.swing.JLabel DateSaleLabel;
+    private javax.swing.JLabel IdCashierLabel;
+    private javax.swing.JLabel IdTransactionLabel;
+    private javax.swing.JLabel NameStoreLabel;
+    private javax.swing.JLabel NoTelpLabel;
+    private javax.swing.JButton PrintReceiptNote;
+    private javax.swing.JLabel ReturnTotalLabel;
+    private javax.swing.JButton SaveReceiptNote;
+    private javax.swing.JLabel TotalAmountLabel;
+    private javax.swing.JLabel TotalPriceLabel;
     private javax.swing.JDialog jDialog1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     // End of variables declaration//GEN-END:variables
 }

@@ -33,8 +33,8 @@ public class CancelSales extends javax.swing.JDialog {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        RejectConfirmSale = new javax.swing.JButton();
+        ConfirmCancelSale = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("CANCEL TRANSACTION");
@@ -45,18 +45,18 @@ public class CancelSales extends javax.swing.JDialog {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         jLabel2.setText("Are your sure canceling this transaction?");
 
-        jButton1.setBackground(new java.awt.Color(204, 255, 204));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(0, 153, 0));
-        jButton1.setText("No");
-        jButton1.setToolTipText("");
-        jButton1.addActionListener(this::jButton1ActionPerformed);
+        RejectConfirmSale.setBackground(new java.awt.Color(204, 255, 204));
+        RejectConfirmSale.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        RejectConfirmSale.setForeground(new java.awt.Color(0, 153, 0));
+        RejectConfirmSale.setText("No");
+        RejectConfirmSale.setToolTipText("");
+        RejectConfirmSale.addActionListener(this::RejectConfirmSaleActionPerformed);
 
-        jButton2.setBackground(new java.awt.Color(255, 204, 204));
-        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 0, 0));
-        jButton2.setText("Yes");
-        jButton2.addActionListener(this::jButton2ActionPerformed);
+        ConfirmCancelSale.setBackground(new java.awt.Color(255, 204, 204));
+        ConfirmCancelSale.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        ConfirmCancelSale.setForeground(new java.awt.Color(255, 0, 0));
+        ConfirmCancelSale.setText("Yes");
+        ConfirmCancelSale.addActionListener(this::ConfirmCancelSaleActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -70,9 +70,9 @@ public class CancelSales extends javax.swing.JDialog {
                 .addGap(72, 72, 72)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(RejectConfirmSale, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(ConfirmCancelSale, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel2))
                 .addContainerGap(80, Short.MAX_VALUE))
         );
@@ -85,21 +85,21 @@ public class CancelSales extends javax.swing.JDialog {
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ConfirmCancelSale, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(RejectConfirmSale, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(42, 42, 42))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void ConfirmCancelSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConfirmCancelSaleActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_ConfirmCancelSaleActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void RejectConfirmSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RejectConfirmSaleActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_RejectConfirmSaleActionPerformed
 
     /**
      * @param args the command line arguments
@@ -139,8 +139,8 @@ public class CancelSales extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton ConfirmCancelSale;
+    private javax.swing.JButton RejectConfirmSale;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
