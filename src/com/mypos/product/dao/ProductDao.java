@@ -16,8 +16,7 @@ public class ProductDao {
 
     /**
      * Retrieves all products from the database, ordered by the most recently created.
-     * 
-     * @return A list of all Product objects.
+     * @return 
      */
     public List<Product> getAllProducts() {
         List<Product> productList = new ArrayList<>();
@@ -48,8 +47,7 @@ public class ProductDao {
     
     /**
      * Adds a new product to the database.
-     * 
-     * @param product The Product object to add.
+     * * @param product The Product object to add.
      * @return true if the product was added successfully, false otherwise.
      */
     public boolean addProduct(Product product) {
@@ -76,6 +74,29 @@ public class ProductDao {
             if (e.getSQLState().equals("23000")) { // SQLSTATE for integrity constraint violation
                 javax.swing.JOptionPane.showMessageDialog(null, "Error: A product with this code already exists.", "Duplicate Entry", javax.swing.JOptionPane.ERROR_MESSAGE);
             }
+            return false;
+        }
+    }
+
+    /**
+     * Deletes a product from the database based on its code.
+     * @param code
+     * @return true if deleted successfully.
+     */
+    public boolean deleteProduct(String code) {
+        String sql = "DELETE FROM products WHERE code = ?";
+        
+        // Menggunakan connectDB sesuai import di atas
+        try (Connection conn = connectDB.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, code);
+            int rowsAffected = pstmt.executeUpdate();
+            
+            return rowsAffected > 0;
+            
+        } catch (SQLException e) {
+            System.err.println("Error deleting product: " + e.getMessage());
             return false;
         }
     }

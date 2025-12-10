@@ -70,6 +70,7 @@ public class ProductPanel extends javax.swing.JPanel {
         InputProduct.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         InputProduct.setForeground(new java.awt.Color(102, 102, 102));
         InputProduct.setText("Search a product...");
+        InputProduct.addActionListener(this::InputProductActionPerformed);
 
         SearchProduct.setBackground(new java.awt.Color(204, 204, 255));
         SearchProduct.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-search-30.png"))); // NOI18N
@@ -119,7 +120,6 @@ public class ProductPanel extends javax.swing.JPanel {
         DeleteProduct.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         DeleteProduct.setForeground(new java.awt.Color(204, 0, 0));
         DeleteProduct.setText("Delete");
-        DeleteProduct.addActionListener(this::DeleteProductActionPerformed);
         DeleteProduct.addActionListener(this::DeleteProductActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -239,16 +239,45 @@ public class ProductPanel extends javax.swing.JPanel {
             dialog.setVisible(true);
     }//GEN-LAST:event_EditProductActionPerformed
 
+    private void InputProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputProductActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_InputProductActionPerformed
+
     private void DeleteProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteProductActionPerformed
-        // Cari parent window (bisa JFrame atau JDialog)
-            java.awt.Window parentWindow = javax.swing.SwingUtilities.getWindowAncestor(this);
+        // 1. Cek baris terpilih
+        int selectedRow = jTable2.getSelectedRow();
+        
+        if (selectedRow == -1) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Pilih data di tabel dulu!", 
+                "Warning", 
+                javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-            // Buat dialog AddProduct (modal = true)
-            DeleteProduct dialog = new DeleteProduct((java.awt.Frame) parentWindow, true);
+        // 2. Ambil ID dan Nama Produk dari tabel
+        // Pastikan urutan kolom index [0] adalah ID dan [1] adalah Nama sesuai loadData() Anda
+        String idProduk = jTable2.getValueAt(selectedRow, 0).toString();
+        String namaProduk = jTable2.getValueAt(selectedRow, 1).toString();
 
-            // Tampilkan dialog
-            dialog.setLocationRelativeTo(parentWindow); // Supaya muncul di tengah
-            dialog.setVisible(true);
+        // 3. Panggil Dialog DeleteProduct
+        java.awt.Window parent = javax.swing.SwingUtilities.getWindowAncestor(this);
+        DeleteProduct dialog = new DeleteProduct((java.awt.Frame) parent, true, namaProduk);
+        
+        // Tampilkan dialog
+        dialog.setVisible(true);
+
+        // 4. Eksekusi Hapus jika user menekan tombol Delete (confirmed = true)
+        if (dialog.isConfirmed()) {
+            com.mypos.product.dao.ProductDao dao = new com.mypos.product.dao.ProductDao();
+            
+            if (dao.deleteProduct(idProduk)) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Berhasil dihapus!");
+                loadData(); // Refresh tabel
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "Gagal hapus data.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_DeleteProductActionPerformed
  
 
