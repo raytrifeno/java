@@ -66,7 +66,7 @@ public class MainFrame extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnLogOut = new javax.swing.JButton();
         AddUsers = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
 
@@ -105,10 +105,11 @@ public class MainFrame extends javax.swing.JFrame {
         jButton4.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jButton4.addActionListener(this::jButton4ActionPerformed);
 
-        jButton1.setText("LOGOUT");
-        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-        jButton1.setPreferredSize(new java.awt.Dimension(120, 32));
+        btnLogOut.setText("LOGOUT");
+        btnLogOut.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnLogOut.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        btnLogOut.setPreferredSize(new java.awt.Dimension(120, 32));
+        btnLogOut.addActionListener(this::btnLogOutActionPerformed);
 
         AddUsers.setText("Add Users");
         AddUsers.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -137,7 +138,7 @@ public class MainFrame extends javax.swing.JFrame {
                         .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(AddUsers, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnLogOut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addContainerGap())
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -162,7 +163,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(AddUsers, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(75, 75, 75)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnLogOut, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(17, 17, 17))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
@@ -207,6 +208,19 @@ public class MainFrame extends javax.swing.JFrame {
         cardLayout.show(contentPanel, "USERS");
     }//GEN-LAST:event_AddUsersActionPerformed
 
+    private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
+        int confirm = javax.swing.JOptionPane.showConfirmDialog(
+         this,
+         "Are you sure you want to logout?",
+         "Logout Confirmation",
+         javax.swing.JOptionPane.YES_NO_OPTION
+    );
+         if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+        this.dispose();
+       }
+       new com.mypos.auth.view.LoginForm().setVisible(true);
+    }//GEN-LAST:event_btnLogOutActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -234,7 +248,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AddUsers;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnLogOut;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;

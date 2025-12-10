@@ -3,19 +3,45 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package com.mypos.auth.view;
-
+import com.mypos.auth.dao.UserDao;
+import com.mypos.auth.model.User;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author raysu
  */
 public class UserManagementPanel extends javax.swing.JPanel {
-
+private java.util.List<com.mypos.auth.model.User> userList;
+private javax.swing.table.DefaultTableModel userTableModel;
+private final com.mypos.auth.dao.UserDao userDao;
     /**
      * Creates new form UserManagementPanel
      */
     public UserManagementPanel() {
         initComponents();
+        this.userDao = new com.mypos.auth.dao.UserDao();
+        this.userTableModel = (javax.swing.table.DefaultTableModel) jTable2.getModel();
+        loadData();
     }
+           private void loadData() {
+             // Fetch the latest user data
+             userList = userDao.getAllUsers();
+             // Clear any existing rows from the table model
+             userTableModel.setRowCount(0);
+    
+             // Loop through the list and add each user to the table
+             for (User user : userList) {
+                 userTableModel.addRow(new Object[]{
+                     user.getId(),
+                     user.getUsername(),
+                     user.getRole(),
+                     user.getCreatedAt(),
+                     user.getUpdatedAt()
+                 });
+             }
+         }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -129,7 +155,66 @@ public class UserManagementPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_BtnSearchActionPerformed
 
     private void EditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditActionPerformed
-        // TODO add your handling code here:
+     int selectedRow = jTable2.getSelectedRow();
+     if (selectedRow == -1) {
+         javax.swing.JOptionPane.showMessageDialog(this, "Please select a user to edit.", "Warning",
+      javax.swing.JOptionPane.WARNING_MESSAGE);
+         return;
+     }
+    
+     // Convert view index to model index in case of sorting
+     int modelRow = jTable2.convertRowIndexToModel(selectedRow);
+     int userId = (int) userTableModel.getValueAt(modelRow, 0);
+   
+    com.mypos.auth.model.User userToEdit = null;
+    for(com.mypos.auth.model.User user : userList) {
+        if(user.getId() == userId) {
+            userToEdit = user;
+            break;
+        }
+    }
+   
+    if (userToEdit == null) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Could not find user data to edit.", "Error",
+      javax.swing.JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+   
+    // Find the parent window for the dialog
+    java.awt.Window parentWindow = javax.swing.SwingUtilities.getWindowAncestor(this);
+   
+    // Reuse AddUserDialog for editing
+    com.mypos.auth.view.AddUserDialog dialog = new com.mypos.auth.view.AddUserDialog((java.awt.Frame) parentWindow, true);
+   
+    // TODO: You still need to add setter methods to your AddUserDialog
+    // to pre-fill the data before showing it.
+    // Example:
+    // dialog.setUsername(userToEdit.getUsername());
+    // dialog.setRole(userToEdit.getRole());
+    // dialog.setFieldsForEdit(); // a method to hide/disable password field
+   
+    dialog.setVisible(true);
+   
+    dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+        @Override
+        public void windowClosed(java.awt.event.WindowEvent e) {
+            if (dialog.isConfirmed()) {
+                com.mypos.auth.model.User updatedUser = new com.mypos.auth.model.User();
+                updatedUser.setId(userId);
+                updatedUser.setUsername(dialog.getUsername());
+                updatedUser.setRole(dialog.getRole());
+                updatedUser.setPassword(dialog.getPassword()); // DAO handles if this is empty
+   
+                if (userDao.updateUser(updatedUser)) {
+                    javax.swing.JOptionPane.showMessageDialog(UserManagementPanel.this, "User updated successfully!");
+                    loadData(); // Refresh table
+                } else {
+                    javax.swing.JOptionPane.showMessageDialog(UserManagementPanel.this, "Failed to update user.", "Database Error",
+      javax.swing.JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    });
     }//GEN-LAST:event_EditActionPerformed
 
     private void SearchBarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchBarActionPerformed
@@ -137,38 +222,65 @@ public class UserManagementPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_SearchBarActionPerformed
 
     private void AddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddActionPerformed
-    // 1. Ambil parent frame agar dialog muncul sebagai modal yang benar
-        javax.swing.JFrame parentFrame = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
-        
-        // 2. Buat Instance dari AddUserDialog (Pastikan import atau nama paketnya benar)
-        // Parameter 'true' artinya MODAL
-        com.mypos.auth.view.AddUserDialog dialog = new com.mypos.auth.view.AddUserDialog(parentFrame, true);
-        
-        // 3. Tampilkan Dialog (Kode PAUSE di sini sampai dialog ditutup)
-        dialog.setVisible(true);
-        
-        // 4. Proses data setelah dialog ditutup
-        if (dialog.isConfirmed()) {
-            String username = dialog.getUsername();
-            String role = dialog.getRole(); // Mengambil role (Admin/Cashier)
-        
-            // 5. Masukkan data ke tabel
-            javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable2.getModel();
-            
-            model.addRow(new Object[]{
-                model.getRowCount() + 1, // No
-                username,                // Name
-                role,                    // Role
-                new java.util.Date(),    // Created At
-                new java.util.Date()     // Updated At
-            });
+     // Find the top-level window (the MainFrame) to act as the parent
+     java.awt.Window parentWindow = javax.swing.SwingUtilities.getWindowAncestor(this);
+    
+     // Create the dialog, passing the parent window and setting it as modal
+     com.mypos.auth.view.AddUserDialog dialog = new com.mypos.auth.view.AddUserDialog((java.awt.Frame) parentWindow, true);
+    
+     dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+     @Override
+         public void windowClosed(java.awt.event.WindowEvent e) {
+         if (dialog.isConfirmed()) {             String username = dialog.getUsername();
+             String password = dialog.getPassword();
+                String role = dialog.getRole();
+   
+                if (username.isEmpty() || password.isEmpty()) {
+                    javax.swing.JOptionPane.showMessageDialog(UserManagementPanel.this, "Username and password cannot be empty.",
+      "Validation Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+   
+                com.mypos.auth.model.User newUser = new com.mypos.auth.model.User(username, password, role);
+                if (userDao.addUser(newUser)) {
+                    javax.swing.JOptionPane.showMessageDialog(UserManagementPanel.this, "User added successfully!");
+                    loadData(); // Refresh table
+                } else {
+                    javax.swing.JOptionPane.showMessageDialog(UserManagementPanel.this, "Failed to add user.", "Database Error",
+      javax.swing.JOptionPane.ERROR_MESSAGE);
+                }
+            }
         }
+    });
+   
+    dialog.setVisible(true); // Show the dialog
     
    
     }//GEN-LAST:event_AddActionPerformed
 
     private void DeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteActionPerformed
-        // TODO add your handling code here:
+         int selectedRow = jTable2.getSelectedRow();
+     if (selectedRow == -1) {
+         javax.swing.JOptionPane.showMessageDialog(this, "Please select a user to delete.", "Warning",
+      javax.swing.JOptionPane.WARNING_MESSAGE);
+         return;
+     }
+    
+     int userId = (int) userTableModel.getValueAt(selectedRow, 0);
+     String username = (String) userTableModel.getValueAt(selectedRow, 1);
+    
+    int confirm = javax.swing.JOptionPane.showConfirmDialog(this, "Are you sure you want to delete user '" + username + "'?",
+      "Confirm Deletion", javax.swing.JOptionPane.YES_NO_OPTION);
+   
+    if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+        if (userDao.deleteUser(userId)) {
+            javax.swing.JOptionPane.showMessageDialog(this, "User deleted successfully!");
+            loadData(); // Refresh table
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Failed to delete user.", "Database Error",
+      javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }
     }//GEN-LAST:event_DeleteActionPerformed
 
 
