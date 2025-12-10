@@ -73,15 +73,7 @@ public class SalesPanel extends javax.swing.JPanel {
             new String [] {
                 "Id Transaction", "Id User", "Receipt Number", "Total Amount", "Amount Paid", "Change Amount", "Sale Datetime"
             }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class, java.lang.Float.class, java.lang.Float.class, java.lang.Float.class, java.lang.Object.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
+        ));
         SalesTable.setPreferredSize(new java.awt.Dimension(800, 700));
         jScrollPane2.setViewportView(SalesTable);
 

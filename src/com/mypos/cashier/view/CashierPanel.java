@@ -152,7 +152,77 @@ public class CashierPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void InputBarcodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputBarcodeActionPerformed
-       scanBarcode();
+       String barcode = InputBarcode.getText();
+
+        // 1. Validasi input kosong
+        if (barcode == null || barcode.trim().isEmpty()) {
+            return; 
+        }
+
+        // 2. Ambil produk dari database
+        com.mypos.product.dao.ProductDao productDao = new com.mypos.product.dao.ProductDao();
+        // Pastikan Anda sudah membuat method getProductByCode di ProductDao
+        com.mypos.product.model.Product product = productDao.getProductByCode(barcode);
+
+        // Handle jika produk tidak ditemukan
+        if (product == null) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Product with barcode '" + barcode + "' not found.", 
+                "Warning", 
+                javax.swing.JOptionPane.WARNING_MESSAGE);
+            
+            InputBarcode.setText("");
+            InputBarcode.requestFocus();
+            return;
+        }
+
+        // 3. Cek apakah produk sudah ada di keranjang (Tabel)
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable2.getModel();
+        boolean productExistsInCart = false;
+        int existingRow = -1;
+
+        // Loop tabel untuk mencari duplikat
+        for (int i = 0; i < model.getRowCount(); i++) {
+            String codeInTable = (String) model.getValueAt(i, 0); // Kolom 0 = ID Product
+            if (codeInTable.equals(product.getCode())) {
+                productExistsInCart = true;
+                existingRow = i;
+                break;
+            }
+        }
+
+        // 4. Update quantity atau tambah baris baru
+        if (productExistsInCart) {
+            // Increment quantity
+            int currentQuantity = (int) model.getValueAt(existingRow, 3); // Kolom 3 = Qty
+            int newQuantity = currentQuantity + 1;
+            model.setValueAt(newQuantity, existingRow, 3);
+
+            // Update Line Total (Harga x Qty Baru)
+            // Pastikan model menyimpan harga sebagai BigDecimal
+            java.math.BigDecimal price = (java.math.BigDecimal) model.getValueAt(existingRow, 2); 
+            java.math.BigDecimal newLineTotal = price.multiply(new java.math.BigDecimal(newQuantity));
+            model.setValueAt(newLineTotal, existingRow, 4); // Kolom 4 = Total
+
+        } else {
+            // Tambah baris baru jika belum ada
+            int initialQuantity = 1;
+            model.addRow(new Object[]{
+                product.getCode(),
+                product.getName(),
+                product.getPrice(),
+                initialQuantity,
+                product.getPrice() // Total awal sama dengan harga satuan
+            });
+        }
+
+        // 5. Reset input field agar siap scan lagi
+        InputBarcode.setText("");
+        InputBarcode.requestFocus();
+        
+        // (Opsional) Di sini nanti Anda bisa panggil fungsi updateGrandTotal() 
+        // untuk menghitung total belanja keseluruhan di label bawah.
+    
     }//GEN-LAST:event_InputBarcodeActionPerformed
 
     private void ScanBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ScanBtnActionPerformed
@@ -172,15 +242,62 @@ public class CashierPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_CancelSaleActionPerformed
     
     private void CheckoutPaymentActionPerformed(java.awt.event.ActionEvent evt) {                                           
-        // Cari parent window (bisa JFrame atau JDialog)
-            java.awt.Window parentWindow = javax.swing.SwingUtilities.getWindowAncestor(this);
+// 1. Ambil model tabel
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable2.getModel();
 
-            // Buat dialog AddProduct (modal = true)
-            CheckoutPayment dialog = new CheckoutPayment((java.awt.Frame) parentWindow, true);
+        // 2. Cek apakah keranjang kosong
+        if (model.getRowCount() == 0) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Keranjang belanja kosong!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-            // Tampilkan dialog
-            dialog.setLocationRelativeTo(parentWindow); // Supaya muncul di tengah
-            dialog.setVisible(true);
+        // 3. Hitung Total Belanja & Siapkan Data Barang (CartItem)
+        java.math.BigDecimal grandTotal = java.math.BigDecimal.ZERO;
+        java.util.List<com.mypos.cashier.model.CartItem> items = new java.util.ArrayList<>();
+        
+        try {
+            for (int i = 0; i < model.getRowCount(); i++) {
+                // Ambil data dari setiap kolom
+                String code = (String) model.getValueAt(i, 0);
+                String name = (String) model.getValueAt(i, 1);
+                java.math.BigDecimal price = (java.math.BigDecimal) model.getValueAt(i, 2);
+                int qty = (int) model.getValueAt(i, 3);
+                java.math.BigDecimal subtotal = (java.math.BigDecimal) model.getValueAt(i, 4);
+                
+                // Tambahkan ke total
+                grandTotal = grandTotal.add(subtotal);
+                
+                // Masukkan ke list items untuk dikirim ke DAO
+                items.add(new com.mypos.cashier.model.CartItem(code, name, price, qty, subtotal));
+            }
+        } catch (Exception e) {
+            System.err.println("Error reading table data: " + e.getMessage());
+            return;
+        }
+
+        // 4. Buka Dialog Pembayaran
+        java.awt.Window parentWindow = javax.swing.SwingUtilities.getWindowAncestor(this);
+        CheckoutPayment dialog = new CheckoutPayment((java.awt.Frame) parentWindow, true, grandTotal);
+        dialog.setVisible(true); 
+
+        // 5. Jika Pembayaran Sukses, SIMPAN KE DATABASE
+        if (dialog.isPaymentSuccess()) {
+            
+            // Panggil DAO
+            com.mypos.cashier.dao.TransactionDao dao = new com.mypos.cashier.dao.TransactionDao();
+            java.math.BigDecimal paidAmount = grandTotal; // Ganti ini nanti dengan input asli
+            java.math.BigDecimal changeAmount = java.math.BigDecimal.ZERO; // Ganti ini nanti
+    
+        boolean saved = dao.saveTransaction(1, grandTotal, dialog.getPaidAmount(), dialog.getChangeAmount(), items);
+    
+        if (saved) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Transaksi Berhasil Disimpan!", "Sukses", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+        model.setRowCount(0); 
+    } else {
+        javax.swing.JOptionPane.showMessageDialog(this, "Gagal menyimpan ke database! Cek Console.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+    }
+   }
     }
     
     private void DeleteItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteItemActionPerformed

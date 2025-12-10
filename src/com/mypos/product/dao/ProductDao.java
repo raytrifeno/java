@@ -120,4 +120,35 @@ public class ProductDao {
             return false;
         }
     }
+
+    /**
+     * Retrieves a single product from the database by its unique code (barcode).
+     * @param code The product code (barcode) to search for.
+     * @return A Product object if found, otherwise null.
+     */
+    public Product getProductByCode(String code) {
+        String sql = "SELECT * FROM products WHERE code = ?";
+        try (Connection conn = connectDB.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, code);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    Product product = new Product();
+                    product.setId(rs.getInt("id"));
+                    product.setCode(rs.getString("code"));
+                    product.setName(rs.getString("name"));
+                    product.setCategory(rs.getString("category"));
+                    product.setPrice(rs.getBigDecimal("price"));
+                    product.setStock(rs.getInt("stock"));
+                    product.setCreatedAt(rs.getTimestamp("created_at"));
+                    product.setUpdatedAt(rs.getTimestamp("updated_at"));
+                    return product;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching product by code: " + e.getMessage());
+        }
+        return null; // Return null if not found or on error
+    }
 }

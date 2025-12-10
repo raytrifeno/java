@@ -1,4 +1,8 @@
 package com.mypos.cashier.view;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.Locale;
+import javax.swing.JOptionPane;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -12,17 +16,73 @@ package com.mypos.cashier.view;
 public class CheckoutPayment extends javax.swing.JDialog {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CheckoutPayment.class.getName());
-
+    private final BigDecimal totalAmount;
+    private boolean isPaymentSuccess = false;
+    private final NumberFormat currencyFormatter;
     /**
      * Creates new form TryDialog
      * @param parent
      * @param modal
+     * @param total
      */
-    public CheckoutPayment(java.awt.Frame parent, boolean modal) {
+    public CheckoutPayment(java.awt.Frame parent, boolean modal, BigDecimal total) {
         super(parent, modal);
-        initComponents();
+        
+        // 1. Simpan total tagihan
+        this.totalAmount = total;
+        
+        // 2. Siapkan formatter Rupiah
+        this.currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+        
+        initComponents(); // Inisialisasi komponen desain
+        
+        // 3. Tampilkan Total Tagihan di field 'Bill'
+        // (Menggunakan nama variabel 'Bill' sesuai desainmu)
+        Bill.setText(currencyFormatter.format(this.totalAmount));
+        
+        // 4. Reset field input
+        PaymentField.setText("");
+        ChangeField.setText("");
+        
+        // 5. Tambah listener untuk hitung kembalian otomatis
+        PaymentField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                calculateChange(); // Panggil fungsi hitung
+            }
+        });
+
+        setLocationRelativeTo(parent);
     }
 
+    public boolean isPaymentSuccess() {
+        return this.isPaymentSuccess;
+    }
+
+    /**
+     * Dynamically calculates and displays the change.
+     */
+    private void calculateChange() {
+        try {
+            // Ambil teks dari PaymentField
+            String paymentText = PaymentField.getText();
+            
+            if (paymentText.isEmpty()) {
+                ChangeField.setText("");
+                return;
+            }
+
+            // Hitung: Uang Masuk - Tagihan
+            BigDecimal paymentAmount = new BigDecimal(paymentText);
+            BigDecimal changeAmount = paymentAmount.subtract(totalAmount);
+
+            // Tampilkan di ChangeField
+            ChangeField.setText(currencyFormatter.format(changeAmount));
+
+        } catch (NumberFormatException e) {
+            ChangeField.setText("Invalid input");
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -33,17 +93,15 @@ public class CheckoutPayment extends javax.swing.JDialog {
     private void initComponents() {
 
         jDialog1 = new javax.swing.JDialog();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        InputMoney = new javax.swing.JTextField();
+        Payment = new javax.swing.JLabel();
+        Change = new javax.swing.JLabel();
+        Amount = new javax.swing.JLabel();
+        PaymentField = new javax.swing.JTextField();
         CancelPayment = new javax.swing.JButton();
         SubmitPayment = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
-        TotalPriceLabel = new javax.swing.JLabel();
-        TotalAmountLabel = new javax.swing.JLabel();
-        ReturnAmountLabel = new javax.swing.JLabel();
+        Bill = new javax.swing.JTextField();
+        ChangeField = new javax.swing.JTextField();
 
         javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
         jDialog1.getContentPane().setLayout(jDialog1Layout);
@@ -60,88 +118,88 @@ public class CheckoutPayment extends javax.swing.JDialog {
         setTitle("PAYMENT");
         setResizable(false);
 
-        jLabel1.setText("Payment        :");
+        Payment.setText("Payment        :");
 
-        jLabel2.setText("Total              :");
+        Change.setText("Change           :");
 
-        jLabel3.setText("Return            :");
+        Amount.setText("Amount         :");
 
-        jLabel4.setText("Amount         :");
-
-        InputMoney.setText("jTextField1");
+        PaymentField.addActionListener(this::PaymentFieldActionPerformed);
 
         CancelPayment.setBackground(new java.awt.Color(255, 255, 204));
         CancelPayment.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         CancelPayment.setForeground(new java.awt.Color(102, 102, 0));
         CancelPayment.setText("Cancel");
+        CancelPayment.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         CancelPayment.addActionListener(this::CancelPaymentActionPerformed);
 
         SubmitPayment.setBackground(new java.awt.Color(204, 204, 255));
         SubmitPayment.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         SubmitPayment.setForeground(new java.awt.Color(102, 102, 255));
         SubmitPayment.setText("Submit");
+        SubmitPayment.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        SubmitPayment.addActionListener(this::SubmitPaymentActionPerformed);
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel6.setText("PAYMENT SALE");
 
-        TotalPriceLabel.setText("1000000,00");
+        Bill.setEditable(false);
+        Bill.setFocusable(false);
+        Bill.addActionListener(this::BillActionPerformed);
 
-        TotalAmountLabel.setText("1200000,00");
-
-        ReturnAmountLabel.setText("200000,00");
+        ChangeField.setEditable(false);
+        ChangeField.setFocusable(false);
+        ChangeField.addActionListener(this::ChangeFieldActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(33, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addContainerGap(72, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(1, 1, 1)
+                                .addComponent(Change)
+                                .addGap(18, 18, 18)
+                                .addComponent(ChangeField, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(Payment)
+                                    .addComponent(Amount))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel6)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(PaymentField)
+                                        .addComponent(Bill, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(CancelPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(SubmitPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel3))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(InputMoney, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(TotalPriceLabel)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(ReturnAmountLabel)
-                                .addComponent(TotalAmountLabel)))))
-                .addContainerGap(33, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(120, 120, 120)
-                .addComponent(jLabel6)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(151, 151, 151)
+                        .addComponent(SubmitPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(62, 62, 62))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(36, 36, 36)
+                .addGap(40, 40, 40)
                 .addComponent(jLabel6)
-                .addGap(50, 50, 50)
+                .addGap(46, 46, 46)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(InputMoney, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29)
+                    .addComponent(Bill, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Amount, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(TotalPriceLabel))
-                .addGap(29, 29, 29)
+                    .addComponent(PaymentField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Payment))
+                .addGap(52, 52, 52)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(TotalAmountLabel))
-                .addGap(29, 29, 29)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(ReturnAmountLabel))
-                .addGap(66, 66, 66)
+                    .addComponent(Change)
+                    .addComponent(ChangeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(87, 87, 87)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(SubmitPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(CancelPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -152,8 +210,45 @@ public class CheckoutPayment extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void CancelPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelPaymentActionPerformed
-        // TODO add your handling code here:
+        this.isPaymentSuccess = false;
+        this.dispose();
     }//GEN-LAST:event_CancelPaymentActionPerformed
+
+    private void PaymentFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PaymentFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_PaymentFieldActionPerformed
+
+    private void BillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BillActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_BillActionPerformed
+
+    private void ChangeFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChangeFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ChangeFieldActionPerformed
+
+    private void SubmitPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SubmitPaymentActionPerformed
+        try {
+            String paymentText = PaymentField.getText();
+            if (paymentText.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Harap masukkan jumlah uang!", "Warning", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            BigDecimal paymentAmount = new BigDecimal(paymentText);
+
+            if (paymentAmount.compareTo(totalAmount) < 0) {
+                JOptionPane.showMessageDialog(this, "Uang pembayaran kurang!", "Gagal", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            this.isPaymentSuccess = true;
+            this.dispose(); // Tutup dialog
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Input uang tidak valid (Hanya Angka)!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    
+    }//GEN-LAST:event_SubmitPaymentActionPerformed
 
     /**
      * @param args the command line arguments
@@ -177,33 +272,49 @@ public class CheckoutPayment extends javax.swing.JDialog {
         //</editor-fold>
 
         /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                CheckoutPayment dialog = new CheckoutPayment(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            // UBAH BARIS INI: Tambahkan , new BigDecimal("0") di akhir kurung
+            CheckoutPayment dialog = new CheckoutPayment(new javax.swing.JFrame(), true, new BigDecimal("0"));
+            
+            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosing(java.awt.event.WindowEvent e) {
+                    System.exit(0);
+                }
+            });
+            dialog.setVisible(true);
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel Amount;
+    private javax.swing.JTextField Bill;
     private javax.swing.JButton CancelPayment;
-    private javax.swing.JTextField InputMoney;
-    private javax.swing.JLabel ReturnAmountLabel;
+    private javax.swing.JLabel Change;
+    private javax.swing.JTextField ChangeField;
+    private javax.swing.JLabel Payment;
+    private javax.swing.JTextField PaymentField;
     private javax.swing.JButton SubmitPayment;
-    private javax.swing.JLabel TotalAmountLabel;
-    private javax.swing.JLabel TotalPriceLabel;
     private javax.swing.JDialog jDialog1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
     // End of variables declaration//GEN-END:variables
+
+    // Tambahkan di CheckoutPayment.java
+    public java.math.BigDecimal getPaidAmount() {
+    try {
+        return new java.math.BigDecimal(PaymentField.getText());
+    } catch (Exception e) {
+        return java.math.BigDecimal.ZERO;
+    }
+}
+
+    public java.math.BigDecimal getChangeAmount() {
+    // Hitung ulang atau ambil dari textfield
+    try {
+        java.math.BigDecimal paid = getPaidAmount();
+        return paid.subtract(this.totalAmount);
+    } catch (Exception e) {
+        return java.math.BigDecimal.ZERO;
+    }
+}
+
 }
