@@ -30,6 +30,11 @@ public class ProductPanel extends javax.swing.JPanel {
                                ? StockFilter.getSelectedItem().toString() 
                                : "All Stock"; // Pastikan di Design item pertama adalah "All Stock" atau tangani logicnya
 
+        String searchText = InputProduct.getText().trim().toLowerCase();
+        // Jika teksnya masih default "Search a product...", anggap kosong
+        if (searchText.equals("search a product...")) {
+            searchText = "";
+        }
         // 2. Ambil semua data dari Database
         com.mypos.product.dao.ProductDao productDao = new com.mypos.product.dao.ProductDao();
         java.util.List<com.mypos.product.model.Product> products = productDao.getAllProducts();
@@ -64,12 +69,24 @@ public class ProductPanel extends javax.swing.JPanel {
                 // Asumsi jika user belum pilih atau ada opsi 'All Stock'
                 stockMatch = true; 
             }
-            // PENTING: Karena di kode awal Anda tidak ada opsi "All Stock", 
-            // jika user memilih filter stock, data akan selalu terfilter.
-            // Sebaiknya tambahkan item "All Stock" di properti model ComboBox StockFilter Anda.
+            
+            boolean searchMatch = false;
+            if (searchText.isEmpty()) {
+                searchMatch = true; // Kalau tidak cari apa-apa, semua lolos
+            } else {
+                // Cek apakah Nama Produk mengandung teks yang dicari
+                if (product.getName().toLowerCase().contains(searchText)) {
+                    searchMatch = true;
+                }
+                // Opsional: Bisa tambahkan pencarian by ID juga
+                else if (product.getCode().toLowerCase().contains(searchText)) {
+                    searchMatch = true;
+                }
+            }
+                
 
             // 5. Masukkan ke tabel HANYA JIKA kedua filter cocok
-            if (categoryMatch && stockMatch) {
+            if (categoryMatch && stockMatch && searchMatch) {
                 model.addRow(new Object[]{
                     product.getCode(),
                     product.getName(),
@@ -93,7 +110,7 @@ public class ProductPanel extends javax.swing.JPanel {
 
         jLabel2 = new javax.swing.JLabel();
         InputProduct = new javax.swing.JTextField();
-        SearchProduct = new javax.swing.JButton();
+        BtnSearchProduct = new javax.swing.JButton();
         CategoryFilter = new javax.swing.JComboBox<>();
         AddProduct = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -111,12 +128,20 @@ public class ProductPanel extends javax.swing.JPanel {
         InputProduct.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         InputProduct.setForeground(new java.awt.Color(102, 102, 102));
         InputProduct.setText("Search a product...");
+        InputProduct.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                InputProductFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                InputProductFocusLost(evt);
+            }
+        });
         InputProduct.addActionListener(this::InputProductActionPerformed);
 
-        SearchProduct.setBackground(new java.awt.Color(204, 204, 255));
-        SearchProduct.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-search-30.png"))); // NOI18N
-        SearchProduct.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        SearchProduct.addActionListener(this::SearchProductActionPerformed);
+        BtnSearchProduct.setBackground(new java.awt.Color(204, 204, 255));
+        BtnSearchProduct.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-search-30.png"))); // NOI18N
+        BtnSearchProduct.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        BtnSearchProduct.addActionListener(this::BtnSearchProductActionPerformed);
 
         CategoryFilter.setBackground(new java.awt.Color(204, 204, 255));
         CategoryFilter.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
@@ -183,7 +208,7 @@ public class ProductPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(InputProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(SearchProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(BtnSearchProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 306, Short.MAX_VALUE)
                         .addComponent(StockFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(32, 32, 32)
@@ -198,13 +223,13 @@ public class ProductPanel extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(AddProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(CategoryFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(StockFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(InputProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(SearchProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(BtnSearchProduct, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(InputProduct))
                 .addGap(29, 29, 29)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
@@ -262,9 +287,9 @@ public class ProductPanel extends javax.swing.JPanel {
 
     }//GEN-LAST:event_AddProductActionPerformed
 
-    private void SearchProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchProductActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_SearchProductActionPerformed
+    private void BtnSearchProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSearchProductActionPerformed
+       loadData();
+    }//GEN-LAST:event_BtnSearchProductActionPerformed
 
     private void StockFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StockFilterActionPerformed
         loadData();
@@ -323,7 +348,7 @@ public class ProductPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_EditProductActionPerformed
 
     private void InputProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputProductActionPerformed
-        // TODO add your handling code here:
+        loadData();
     }//GEN-LAST:event_InputProductActionPerformed
 
     private void DeleteProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteProductActionPerformed
@@ -362,15 +387,34 @@ public class ProductPanel extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_DeleteProductActionPerformed
+
+    private void InputProductFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_InputProductFocusGained
+        String textSekarang = InputProduct.getText();
+        
+        if (textSekarang.equals("Search a product...")) {
+            InputProduct.setText("");
+            InputProduct.setForeground(new java.awt.Color(0, 0, 0)); // Ubah warna jadi HITAM
+        }
+    
+    }//GEN-LAST:event_InputProductFocusGained
+
+    private void InputProductFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_InputProductFocusLost
+        String textSekarang = InputProduct.getText();
+        
+        if (textSekarang.isEmpty()) {
+            InputProduct.setText("Search a product...");
+            InputProduct.setForeground(new java.awt.Color(153, 153, 153)); // Ubah warna jadi ABU-ABU
+        }
+    }//GEN-LAST:event_InputProductFocusLost
  
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AddProduct;
+    private javax.swing.JButton BtnSearchProduct;
     private javax.swing.JComboBox<String> CategoryFilter;
     private javax.swing.JButton DeleteProduct;
     private javax.swing.JButton EditProduct;
     private javax.swing.JTextField InputProduct;
-    private javax.swing.JButton SearchProduct;
     private javax.swing.JComboBox<String> StockFilter;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane2;
