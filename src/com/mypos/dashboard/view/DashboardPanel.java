@@ -58,7 +58,7 @@ public class DashboardPanel extends javax.swing.JPanel {
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(102, 51, 255));
-        jLabel4.setText("Welcome, Admin");
+        jLabel4.setText("Welcome,Bos");
 
         jPanel2.setBackground(new java.awt.Color(204, 204, 255));
         jPanel2.setPreferredSize(new java.awt.Dimension(212, 164));

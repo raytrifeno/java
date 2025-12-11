@@ -30,7 +30,6 @@ public class CashierPanel extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         InputBarcode = new javax.swing.JTextField();
         ScanBtn = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
         CancelSale = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
@@ -52,15 +51,11 @@ public class CashierPanel extends javax.swing.JPanel {
         ScanBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         ScanBtn.addActionListener(this::ScanBtnActionPerformed);
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 2, 18)); // NOI18N
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-admin-24.png"))); // NOI18N
-        jLabel4.setText("ADMIN");
-        jLabel4.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-
         CancelSale.setBackground(new java.awt.Color(255, 255, 204));
         CancelSale.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         CancelSale.setForeground(new java.awt.Color(102, 102, 0));
         CancelSale.setText("Cancel");
+        CancelSale.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         CancelSale.addActionListener(this::CancelSaleActionPerformed);
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
@@ -86,6 +81,7 @@ public class CashierPanel extends javax.swing.JPanel {
         CheckoutSale.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         CheckoutSale.setForeground(new java.awt.Color(0, 153, 51));
         CheckoutSale.setText("Checkout");
+        CheckoutSale.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         CheckoutSale.addActionListener(this::CheckoutPaymentActionPerformed);
         CheckoutSale.addActionListener(this::CheckoutSaleActionPerformed);
 
@@ -93,6 +89,7 @@ public class CashierPanel extends javax.swing.JPanel {
         DeleteItem.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         DeleteItem.setForeground(new java.awt.Color(204, 0, 0));
         DeleteItem.setText("Delete");
+        DeleteItem.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         DeleteItem.addActionListener(this::DeleteItemActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -115,17 +112,14 @@ public class CashierPanel extends javax.swing.JPanel {
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 980, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 796, Short.MAX_VALUE)
-                        .addComponent(jLabel4)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(27, 27, 27))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(22, 22, 22)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel4))
+                .addComponent(jLabel2)
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -221,124 +215,94 @@ public class CashierPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_ScanBtnActionPerformed
 
     private void CancelSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelSaleActionPerformed
-        // Cari parent window (bisa JFrame atau JDialog)
-            java.awt.Window parentWindow = javax.swing.SwingUtilities.getWindowAncestor(this);
-
-            // Buat dialog AddProduct (modal = true)
-            CancelSales dialog = new CancelSales((java.awt.Frame) parentWindow, true);
-
-            // Tampilkan dialog
-            dialog.setLocationRelativeTo(parentWindow); // Supaya muncul di tengah
-            dialog.setVisible(true);
+       javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable2.getModel();
+    
+     // Check if there's anything to cancel
+     if (model.getRowCount() > 0) {
+         // Ask the user for confirmation
+         int confirm = javax.swing.JOptionPane.showConfirmDialog(
+             this,
+             "Are you sure you want to cancel this transaction and clear the cart?",
+            "Confirm Cancellation",
+            javax.swing.JOptionPane.YES_NO_OPTION,
+            javax.swing.JOptionPane.WARNING_MESSAGE
+        );
+   
+        // If the user clicks "Yes", clear the table
+        if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+            model.setRowCount(0);
+            // Optional: you can also clear any total labels here
+            // totalLabel.setText("Rp 0");
+        }
+    }
     }//GEN-LAST:event_CancelSaleActionPerformed
     
-private void CheckoutPaymentActionPerformed(java.awt.event.ActionEvent evt) {
-        // ---------------------------------------------------------
-        // 1. CEK USER LOGIN (Mencegah user ID null/salah)
-        // ---------------------------------------------------------
-        // Pastikan UserSession sudah dibuat dan diisi saat Login
+private void CheckoutPaymentActionPerformed(java.awt.event.ActionEvent evt) {                                                
+        
+        // ... (Kode Validasi User & Keranjang seperti sebelumnya) ...
+        // 1. Cek User Login
         com.mypos.auth.model.User currentUser = com.mypos.auth.model.UserSession.getInstance().getUser();
+        if (currentUser == null) return;
 
-        if (currentUser == null) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                "Error: Sesi habis atau Anda belum login! Silakan logout dan login kembali.",
-                "Akses Ditolak", javax.swing.JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        // ---------------------------------------------------------
-        // 2. VALIDASI KERANJANG
-        // ---------------------------------------------------------
+        // 2. Ambil model tabel
         javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable2.getModel();
+        if (model.getRowCount() == 0) return;
 
-        if (model.getRowCount() == 0) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                "Keranjang belanja kosong!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        // ---------------------------------------------------------
-        // 3. SIAPKAN DATA (Hitung Total & List Barang)
-        // ---------------------------------------------------------
+        // 3. Hitung Total
         java.math.BigDecimal grandTotal = java.math.BigDecimal.ZERO;
         java.util.List<com.mypos.cashier.model.CartItem> items = new java.util.ArrayList<>();
-
         try {
             for (int i = 0; i < model.getRowCount(); i++) {
+                // ... (Ambil data dari tabel) ...
                 String code = (String) model.getValueAt(i, 0);
                 String name = (String) model.getValueAt(i, 1);
                 java.math.BigDecimal price = (java.math.BigDecimal) model.getValueAt(i, 2);
                 int qty = (int) model.getValueAt(i, 3);
                 java.math.BigDecimal subtotal = (java.math.BigDecimal) model.getValueAt(i, 4);
-
+                
                 grandTotal = grandTotal.add(subtotal);
                 items.add(new com.mypos.cashier.model.CartItem(code, name, price, qty, subtotal));
             }
-        } catch (Exception e) {
-            System.err.println("Error reading table data: " + e.getMessage());
-            return;
-        }
+        } catch (Exception e) { return; }
 
-        // ---------------------------------------------------------
-        // 4. BUKA DIALOG PEMBAYARAN
-        // ---------------------------------------------------------
+        // 4. BUKA DIALOG PEMBAYARAN (CheckoutPayment)
         java.awt.Window parentWindow = javax.swing.SwingUtilities.getWindowAncestor(this);
         CheckoutPayment dialog = new CheckoutPayment((java.awt.Frame) parentWindow, true, grandTotal);
-        dialog.setVisible(true);
+        dialog.setVisible(true); // <--- TUNGGU DI SINI SAMPAI TOMBOL SUBMIT DIKLIK
 
-        // ---------------------------------------------------------
-        // 5. PROSES SIMPAN KE DATABASE (Jika Bayar Sukses)
-        // ---------------------------------------------------------
+        // 5. SETELAH TOMBOL SUBMIT DIKLIK DAN SUKSES
         if (dialog.isPaymentSuccess()) {
-
+            
             com.mypos.cashier.dao.TransactionDao dao = new com.mypos.cashier.dao.TransactionDao();
-
-            // PENTING: Di sini kita kirim ID User yang asli (currentUser.getId())
-            boolean saved = dao.saveTransaction(
-                currentUser.getId(),        // ID User dari Session
-                grandTotal,                 // Total Belanja
-                dialog.getPaidAmount(),     // Uang yang dibayar (dari Dialog)
-                dialog.getChangeAmount(),   // Kembalian (dari Dialog)
-                items                       // List Barang
-            );
-
+            boolean saved = dao.saveTransaction(currentUser.getId(), grandTotal, dialog.getPaidAmount(), dialog.getChangeAmount(), items); 
+            
             if (saved) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Transaksi Berhasil Disimpan!", "Sukses", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-
-                // ======================================================================
-                // MULAI KODE CETAK STRUK DI SINI
-                // ======================================================================
-                int printOption = javax.swing.JOptionPane.showConfirmDialog(this,
-                        "Apakah ingin mencetak struk?", "Cetak Struk",
-                        javax.swing.JOptionPane.YES_NO_OPTION);
-
-                if (printOption == javax.swing.JOptionPane.YES_OPTION) {
-                    try {
-                        // Generate nomor resi sementara untuk dicetak
-                        String receiptNoForPrint = "TRX-" + System.currentTimeMillis();
-
-                        // Panggil StrukPrinter yang baru Anda buat
-                        com.mypos.util.StrukPrinter printer = new com.mypos.util.StrukPrinter(
-                            receiptNoForPrint,
-                            currentUser.getUsername(), // Nama Kasir
-                            items,                     // List Barang
-                            grandTotal,                // Total
-                            dialog.getPaidAmount(),    // Bayar
-                            dialog.getChangeAmount()   // Kembali
-                        );
-
-                        printer.printStruk(); // <--- Ini akan memunculkan dialog pilih printer
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        javax.swing.JOptionPane.showMessageDialog(this, "Gagal Mencetak Struk: " + e.getMessage());
-                    }
+                try {
+                    String receiptNoForPrint = "TRX-" + System.currentTimeMillis(); 
+                    
+                    // Langsung munculkan Preview Struk
+                    com.mypos.util.ReceiptPreviewDialog preview = new com.mypos.util.ReceiptPreviewDialog(
+                        (javax.swing.JFrame) parentWindow,
+                        true, 
+                        receiptNoForPrint,
+                        currentUser.getUsername(), 
+                        items,                     
+                        grandTotal,                
+                        dialog.getPaidAmount(),    
+                        dialog.getChangeAmount()   
+                    );
+                    
+                    preview.setVisible(true);
+                    
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                // ======================================================================
 
-                model.setRowCount(0); // Bersihkan tabel keranjang
+                model.setRowCount(0); // Bersihkan keranjang
+                javax.swing.JOptionPane.showMessageDialog(this, "Transaksi Selesai!", "Sukses", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                
             } else {
-                javax.swing.JOptionPane.showMessageDialog(this, "Gagal menyimpan ke database! Cek Console.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                javax.swing.JOptionPane.showMessageDialog(this, "Gagal simpan database!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -423,7 +387,6 @@ private void CheckoutPaymentActionPerformed(java.awt.event.ActionEvent evt) {
     private javax.swing.JTextField InputBarcode;
     private javax.swing.JButton ScanBtn;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable2;
     // End of variables declaration//GEN-END:variables

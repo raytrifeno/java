@@ -4,22 +4,92 @@
  */
 package com.mypos.util;
 
+import com.mypos.cashier.model.CartItem;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import javax.swing.UnsupportedLookAndFeelException;
 /**
  *
  * @author raysu
  */
 public class ReceiptPreviewDialog extends javax.swing.JDialog {
-    
+    private final String receiptNo;
+    private final String cashierName;
+    private final List<CartItem> items;
+    private final BigDecimal total;
+    private final BigDecimal pay;
+    private final BigDecimal change;
+    private final DecimalFormat currency = new DecimalFormat("#,###");
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ReceiptPreviewDialog.class.getName());
 
     /**
      * Creates new form NewJDialog
+     * @param parent
+     * @param modal
+     * @param receiptNo
+     * @param cashierName
+     * @param items
+     * @param total
+     * @param pay
+     * @param change
      */
-    public ReceiptPreviewDialog(java.awt.Frame parent, boolean modal) {
+    public ReceiptPreviewDialog(java.awt.Frame parent, boolean modal, 
+                                String receiptNo, String cashierName, 
+                                List<CartItem> items, BigDecimal total, BigDecimal pay, BigDecimal change) {
         super(parent, modal);
         initComponents();
+        this.receiptNo = receiptNo;
+        this.cashierName = cashierName;
+        this.items = items;
+        this.total = total;
+        this.pay = pay;
+        this.change = change;
+        tampilkanStruk(receiptNo, cashierName, items, total, pay, change);
     }
+private void tampilkanStruk(String receiptNo, String cashierName, List<CartItem> items, 
+                                BigDecimal total, BigDecimal pay, BigDecimal change) {
+        StringBuilder sb = new StringBuilder();
+        String line = "------------------------------\n"; // Pemisah (30 karakter)
 
+        sb.append("       VENDRA POS STORE       \n");
+        sb.append("    Jl. Maju Mundur No. 1     \n");
+        sb.append("     Telp: 0812-3456-7890     \n");
+        sb.append(line);
+        sb.append("No   : ").append(receiptNo).append("\n");
+        sb.append("Kasir: ").append(cashierName).append("\n");
+        sb.append("Tgl  : ").append(new SimpleDateFormat("dd-MM-yyyy HH:mm").format(new Date())).append("\n");
+        sb.append(line);
+
+        for (CartItem item : items) {
+            String name = item.getProductName();
+            if (name.length() > 20) name = name.substring(0, 20) + "..";
+            
+            sb.append(name).append("\n");
+            
+            // Format: 2 x 5.000 = 10.000
+            String qtyInfo = item.getQuantity() + " x " + currency.format(item.getPrice());
+            String subTotal = currency.format(item.getSubtotal());
+            
+            // Trik Rata Kanan Sederhana dengan String.format
+            // %-18s = Rata kiri 18 huruf, %10s = Rata kanan 10 huruf
+            sb.append(String.format("%-18s %10s\n", qtyInfo, subTotal));
+        }
+
+        sb.append(line);
+        sb.append(String.format("TOTAL   : %18s\n", currency.format(total)));
+        sb.append(String.format("BAYAR   : %18s\n", currency.format(pay)));
+        sb.append(String.format("KEMBALI : %18s\n", currency.format(change)));
+        sb.append(line);
+        sb.append("         TERIMA KASIH         \n");
+        sb.append("   BARANG YANG SUDAH DIBELI   \n");
+        sb.append("     TIDAK DAPAT DITUKAR      \n");
+
+        Receipt.setText(sb.toString()); // Masukkan ke TextArea
+        Receipt.setCaretPosition(0); // Scroll ke paling atas
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -30,37 +100,69 @@ public class ReceiptPreviewDialog extends javax.swing.JDialog {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        Receipt = new javax.swing.JTextArea();
+        CancelPrint = new javax.swing.JButton();
+        btnPrint = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        Receipt.setEditable(false);
+        Receipt.setColumns(20);
+        Receipt.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
+        Receipt.setRows(5);
+        Receipt.setFocusable(false);
+        jScrollPane1.setViewportView(Receipt);
+
+        CancelPrint.setText("Cancel");
+        CancelPrint.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        CancelPrint.addActionListener(this::CancelPrintActionPerformed);
+
+        btnPrint.setText("Print");
+        btnPrint.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnPrint.addActionListener(this::btnPrintActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(CancelPrint)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 114, Short.MAX_VALUE)
+                .addComponent(btnPrint)
+                .addContainerGap())
+            .addComponent(jScrollPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 496, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 466, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnPrint, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
+                    .addComponent(CancelPrint, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void CancelPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelPrintActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_CancelPrintActionPerformed
+
+    private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
+        StrukPrinter printer = new StrukPrinter(receiptNo, cashierName, items, total, pay, change);
+        printer.printStruk();
+        dispose();
+    
+    }//GEN-LAST:event_btnPrintActionPerformed
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+public static void main(String args[]) {
         /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -68,29 +170,56 @@ public class ReceiptPreviewDialog extends javax.swing.JDialog {
                     break;
                 }
             }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException ex) {
+            ex.printStackTrace();
         }
-        //</editor-fold>
 
         /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                ReceiptPreviewDialog dialog = new ReceiptPreviewDialog(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            
+            // --- DATA DUMMY UNTUK TESTING TAMPILAN ---
+            java.util.List<CartItem> dummyItems = new java.util.ArrayList<>();
+            dummyItems.add(new CartItem("123", "Chitato Rasa Sapi Panggang", new BigDecimal("15000"), 2, new BigDecimal("30000")));
+            dummyItems.add(new CartItem("4531", "cola 600ml", new BigDecimal("5000"), 1, new BigDecimal("5000")));
+            dummyItems.add(new CartItem("456", "teh 600ml", new BigDecimal("5000"), 1, new BigDecimal("5000")));
+            dummyItems.add(new CartItem("456", "rokok 600ml", new BigDecimal("5000"), 1, new BigDecimal("5000")));
+            dummyItems.add(new CartItem("456", "rokok 600ml", new BigDecimal("5000"), 1, new BigDecimal("5000")));
+            dummyItems.add(new CartItem("456", "rokok 600ml", new BigDecimal("5000"), 1, new BigDecimal("5000")));
+            dummyItems.add(new CartItem("456", "rokok 600ml", new BigDecimal("5000"), 1, new BigDecimal("5000")));
+            dummyItems.add(new CartItem("456", "rokok 600ml", new BigDecimal("5000"), 1, new BigDecimal("5000")));
+            dummyItems.add(new CartItem("456", "rokok 600ml", new BigDecimal("5000"), 1, new BigDecimal("5000")));
+            dummyItems.add(new CartItem("456", "rokok 600ml", new BigDecimal("5000"), 1, new BigDecimal("5000")));
+            dummyItems.add(new CartItem("456", "rokok 600ml", new BigDecimal("5000"), 1, new BigDecimal("5000")));
+            dummyItems.add(new CartItem("456", "rokok 600ml", new BigDecimal("5000"), 1, new BigDecimal("5000")));
+            dummyItems.add(new CartItem("456", "rokok 600ml", new BigDecimal("5000"), 1, new BigDecimal("5000")));
+            dummyItems.add(new CartItem("456", "rokok 600ml", new BigDecimal("5000"), 1, new BigDecimal("5000")));
+            
+            
+            ReceiptPreviewDialog dialog = new ReceiptPreviewDialog(
+                new javax.swing.JFrame(), 
+                true,
+                "TRX-TEST-001",     // No Resi
+                "Admin",            // Kasir
+                dummyItems,         // List Barang
+                new BigDecimal("35000"), // Total
+                new BigDecimal("50000"), // Bayar
+                new BigDecimal("15000")  // Kembali
+            );
+            
+            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosing(java.awt.event.WindowEvent e) {
+                    System.exit(0);
+                }
+            });
+            dialog.setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton CancelPrint;
+    private javax.swing.JTextArea Receipt;
+    private javax.swing.JButton btnPrint;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
 }
