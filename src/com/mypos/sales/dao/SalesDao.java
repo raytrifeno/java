@@ -34,15 +34,10 @@ public class SalesDao {
 
         // Append WHERE clause based on the selected interval
         switch (interval) {
-            case "Today":
-                sql.append("WHERE DATE(s.sale_date) = CURDATE() ");
-                break;
-            case "Weekly":
-                sql.append("WHERE s.sale_date >= CURDATE() - INTERVAL 7 DAY ");
-                break;
-            case "Monthly":
-                sql.append("WHERE YEAR(s.sale_date) = YEAR(CURDATE()) AND MONTH(s.sale_date) = MONTH(CURDATE()) ");
-                break;
+            case "Today" -> sql.append("WHERE DATE(s.sale_date) = CURDATE() ");
+            case "Weekly" -> sql.append("WHERE s.sale_date >= CURDATE() - INTERVAL 7 DAY ");
+            case "Monthly" -> sql.append("WHERE YEAR(s.sale_date) = YEAR(CURDATE()) AND MONTH(s.sale_date) = MONTH(CURDATE()) ");
+            // "All Time" does not need a WHERE clause
             // "All Time" does not need a WHERE clause
         }
         
@@ -51,8 +46,6 @@ public class SalesDao {
         try (Connection conn = connectDB.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql.toString());
              ResultSet rs = pstmt.executeQuery()) {
-            
-            System.out.println("--- Executing Query for Interval: " + interval + " ---");
 
             while (rs.next()) {
                 Sale sale = new Sale();
@@ -61,13 +54,6 @@ public class SalesDao {
                 int saleId = rs.getInt("id");
                 int userIdInSales = rs.getInt("user_id");
                 String foundName = rs.getString("username");
-                System.out.println(
-                    "DEBUG CHECK -> Sale ID: " + saleId + 
-                    " | UserID in Sales Table: " + userIdInSales + 
-                    " | Username Found: " + foundName
-                );
-                // --- END DEBUGGING LOGIC ---
-
                 sale.setId(saleId);
                 sale.setReceiptNumber(rs.getString("receipt_number"));
                 if (rs.getTimestamp("sale_date") != null) {

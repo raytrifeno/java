@@ -67,8 +67,6 @@ public class TransactionDao {
                 }
                 
                 int[] updateCounts = pstmtStock.executeBatch();
-                System.out.println("DEBUG: Stock update batch executed. Row update counts: " + java.util.Arrays.toString(updateCounts));
-
                 for (int count : updateCounts) {
                     if (count == 0) {
                         // This indicates a product code in the cart did not match any row in the products table.

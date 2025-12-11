@@ -3,9 +3,23 @@ package com.mypos.cashier.view;
 public class CashierPanel extends javax.swing.JPanel {
 
     public CashierPanel() {
-        initComponents();
-        setupTableModel();   // <- tambahkan baris ini
-    }
+    initComponents();
+    setupTableModel();
+
+    // === Auto Focus to Barcode Field ===
+    java.awt.KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(e -> {
+        // Hanya tangani jika character typed
+        if (e.getID() != java.awt.event.KeyEvent.KEY_TYPED) return false;
+
+        // Jika InputBarcode tidak fokus, arahkan fokus ke sana
+        if (!InputBarcode.hasFocus()) {
+            InputBarcode.requestFocus();
+        }
+
+        return false; // jangan blok event
+    });
+}
+
     
     private void setupTableModel() {
     javax.swing.table.DefaultTableModel model =
@@ -44,7 +58,6 @@ public class CashierPanel extends javax.swing.JPanel {
         InputBarcode.setBackground(new java.awt.Color(204, 204, 255));
         InputBarcode.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         InputBarcode.setForeground(new java.awt.Color(102, 102, 102));
-        InputBarcode.setText("Input barcode..");
         InputBarcode.addActionListener(this::InputBarcodeActionPerformed);
 
         ScanBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8-qr-code-48.png"))); // NOI18N
@@ -121,11 +134,10 @@ public class CashierPanel extends javax.swing.JPanel {
                 .addGap(22, 22, 22)
                 .addComponent(jLabel2)
                 .addGap(26, 26, 26)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(ScanBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(InputBarcode))
-                    .addComponent(CheckoutSale, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(ScanBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(CheckoutSale, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(InputBarcode, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)

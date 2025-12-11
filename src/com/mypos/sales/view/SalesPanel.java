@@ -223,14 +223,13 @@ public class SalesPanel extends javax.swing.JPanel {
     final float usableWidth = pageWidth - margin * 2f;
 
     // layout: kolom berdasarkan persentase dari usableWidth
-    // Atur persentase sesuai kebutuhan agar tidak terpotong
     final double pctNo = 0.05;      // 5%
-    final double pctUser = 0.08;    // 8%
-    final double pctReceipt = 0.18; // 22%
-    final double pctTotal = 0.19;   // 16%
+    final double pctUser = 0.12;    // 12% (diperlebar agar nama kasir muat lebih baik)
+    final double pctReceipt = 0.18; // 18%
+    final double pctTotal = 0.19;   // 19%
     final double pctPaid = 0.15;    // 15%
-    final double pctChange = 0.12;  // 15%
-    final double pctDate = 0.17;    // 19% (sisa)
+    final double pctChange = 0.12;  // 12%
+    final double pctDate = 0.19;    // 19%
 
     final float colNoW = (float)(usableWidth * pctNo);
     final float colUserW = (float)(usableWidth * pctUser);
@@ -257,7 +256,7 @@ public class SalesPanel extends javax.swing.JPanel {
     final float footerFontSize = 10f;
 
     // vertical spacing
-    final float rowLeading = 18f; // increased spacing between rows
+    final float rowLeading = 18f; // spacing between rows
 
     // Y start
     final float yStart = pageHeight - margin;
@@ -318,7 +317,7 @@ public class SalesPanel extends javax.swing.JPanel {
     // move to first data row
     y -= (tableHeaderFontSize + 6f);
 
-    // Use monospace font for table body (stable width)
+    // Use monospace font for table body
     final PDType1Font tableFont = PDType1Font.COURIER;
 
     int no = 1;
@@ -345,10 +344,17 @@ public class SalesPanel extends javax.swing.JPanel {
         cs.showText(String.valueOf(no++));
         cs.endText();
 
-        // User (left aligned)
+        // User (left aligned) -> gunakan cashierName dari model Sale
+        String userName = s.getCashierName();
+        if (userName == null || userName.trim().isEmpty()) {
+            // fallback ke ID jika nama tidak tersedia
+            userName = String.valueOf(s.getUserId());
+        }
+        userName = truncate(userName, 20); // batasi panjang agar tidak merusak layout
+
         cs.beginText(); cs.setFont(tableFont, tableFontSize);
         cs.newLineAtOffset(colX1, y);
-        cs.showText(String.valueOf(s.getUserId()));
+        cs.showText(userName);
         cs.endText();
 
         // Receipt (left aligned, truncated)

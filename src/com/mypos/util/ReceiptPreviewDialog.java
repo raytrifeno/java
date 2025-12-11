@@ -52,7 +52,7 @@ public class ReceiptPreviewDialog extends javax.swing.JDialog {
 private void tampilkanStruk(String receiptNo, String cashierName, List<CartItem> items, 
                                 BigDecimal total, BigDecimal pay, BigDecimal change) {
         StringBuilder sb = new StringBuilder();
-        String line = "------------------------------\n"; // Pemisah (30 karakter)
+        String line = "------------------------------\n"; 
 
         sb.append("       VENDRA POS STORE       \n");
         sb.append("    Jl. Maju Mundur No. 1     \n");
@@ -174,47 +174,7 @@ public static void main(String args[]) {
             ex.printStackTrace();
         }
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(() -> {
-            
-            // --- DATA DUMMY UNTUK TESTING TAMPILAN ---
-            java.util.List<CartItem> dummyItems = new java.util.ArrayList<>();
-            dummyItems.add(new CartItem("123", "Chitato Rasa Sapi Panggang", new BigDecimal("15000"), 2, new BigDecimal("30000")));
-            dummyItems.add(new CartItem("4531", "cola 600ml", new BigDecimal("5000"), 1, new BigDecimal("5000")));
-            dummyItems.add(new CartItem("456", "teh 600ml", new BigDecimal("5000"), 1, new BigDecimal("5000")));
-            dummyItems.add(new CartItem("456", "rokok 600ml", new BigDecimal("5000"), 1, new BigDecimal("5000")));
-            dummyItems.add(new CartItem("456", "rokok 600ml", new BigDecimal("5000"), 1, new BigDecimal("5000")));
-            dummyItems.add(new CartItem("456", "rokok 600ml", new BigDecimal("5000"), 1, new BigDecimal("5000")));
-            dummyItems.add(new CartItem("456", "rokok 600ml", new BigDecimal("5000"), 1, new BigDecimal("5000")));
-            dummyItems.add(new CartItem("456", "rokok 600ml", new BigDecimal("5000"), 1, new BigDecimal("5000")));
-            dummyItems.add(new CartItem("456", "rokok 600ml", new BigDecimal("5000"), 1, new BigDecimal("5000")));
-            dummyItems.add(new CartItem("456", "rokok 600ml", new BigDecimal("5000"), 1, new BigDecimal("5000")));
-            dummyItems.add(new CartItem("456", "rokok 600ml", new BigDecimal("5000"), 1, new BigDecimal("5000")));
-            dummyItems.add(new CartItem("456", "rokok 600ml", new BigDecimal("5000"), 1, new BigDecimal("5000")));
-            dummyItems.add(new CartItem("456", "rokok 600ml", new BigDecimal("5000"), 1, new BigDecimal("5000")));
-            dummyItems.add(new CartItem("456", "rokok 600ml", new BigDecimal("5000"), 1, new BigDecimal("5000")));
-            
-            
-            ReceiptPreviewDialog dialog = new ReceiptPreviewDialog(
-                new javax.swing.JFrame(), 
-                true,
-                "TRX-TEST-001",     // No Resi
-                "Admin",            // Kasir
-                dummyItems,         // List Barang
-                new BigDecimal("35000"), // Total
-                new BigDecimal("50000"), // Bayar
-                new BigDecimal("15000")  // Kembali
-            );
-            
-            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                @Override
-                public void windowClosing(java.awt.event.WindowEvent e) {
-                    System.exit(0);
-                }
-            });
-            dialog.setVisible(true);
-        });
-    }
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton CancelPrint;
