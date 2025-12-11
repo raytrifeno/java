@@ -1,55 +1,51 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mypos.sales.service;
 
-/**
- *
- * @author HP
- */
-
-import com.mypos.sales.dao.SaleDao;
-import com.mypos.sales.dao.SaleDaoImpl;
-import com.mypos.sales.model.Sale;
+import com.mypos.sales.dao.SalesDao; // Import our corrected DAO
+import com.mypos.sales.model.Sale;   // Import the correct model
 import com.mypos.sales.model.SalesSummary;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 import java.util.List;
 
 public class SalesService {
-    private final SaleDao saleDao;
+    
+    // Use our corrected SalesDao
+    private final SalesDao salesDao;
 
     public SalesService() {
-        this.saleDao = new SaleDaoImpl();
+        this.salesDao = new SalesDao();
     }
 
-    public List<Sale> getAllSales() throws Exception {
-        return saleDao.findAll();
-    }
-
+    /**
+     * This method now acts as a direct pass-through to the DAO,
+     * which contains all the necessary logic for filtering by date and joining tables.
+     * @param interval The time period ("Today", "Weekly", etc.)
+     * @return A list of Sale objects, now including the cashier's name.
+     * @throws Exception
+     */
     public List<Sale> getSalesByInterval(String interval) throws Exception {
-        if ("Today".equalsIgnoreCase(interval)) return saleDao.findToday();
-        if ("Weekly".equalsIgnoreCase(interval)) return saleDao.findWeekly();
-        if ("Monthly".equalsIgnoreCase(interval)) return saleDao.findMonthly();
-        if ("All Time".equalsIgnoreCase(interval)) return saleDao.findAll();
-        return saleDao.findAll();
+        return salesDao.getSalesByInterval(interval);
     }
 
-    public SalesSummary getSummaryBetween(LocalDateTime from, LocalDateTime to) throws Exception {
-        return saleDao.getSummaryBetween(from, to);
-    }
-
+    /**
+     * This method calculates a summary from a list of sales.
+     * It is more efficient than running a separate DB query.
+     * @param interval The time period to get the summary for.
+     * @return A SalesSummary object.
+     * @throws Exception
+     */
     public SalesSummary getSummaryByInterval(String interval) throws Exception {
-        LocalDateTime from;
-        LocalDateTime to = LocalDateTime.now();
-        from = switch (interval.toLowerCase()) {
-            case "today" -> LocalDate.now().atStartOfDay();
-            case "weekly" -> LocalDate.now().minusDays(6).atStartOfDay();
-            case "monthly" -> LocalDate.now().withDayOfMonth(1).atStartOfDay();
-            default -> LocalDateTime.of(1970,1,1,0,0);
-        };
-        return getSummaryBetween(from, to);
+        List<Sale> sales = getSalesByInterval(interval);
+        
+        BigDecimal totalAmount = BigDecimal.ZERO;
+        BigDecimal totalPaid = BigDecimal.ZERO;
+        BigDecimal totalChange = BigDecimal.ZERO;
+        
+        for (Sale sale : sales) {
+            totalAmount = totalAmount.add(sale.getTotalAmount());
+            totalPaid = totalPaid.add(sale.getAmountPaid());
+            totalChange = totalChange.add(sale.getChangeAmount());
+        }
+        
+        return new SalesSummary(sales.size(), totalAmount, totalPaid, totalChange);
     }
 }

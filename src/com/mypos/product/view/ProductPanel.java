@@ -18,6 +18,14 @@ public class ProductPanel extends javax.swing.JPanel {
     public ProductPanel() {
         initComponents();
         loadData();
+        this.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentShown(java.awt.event.ComponentEvent e) {
+                // Saat menu Inventory dibuka, tarik data stock terbaru dari DB
+                loadData(); 
+                System.out.println("ProductPanel (Stock) Refreshed Automatically!");
+            }
+        });
     }
     
     private void loadData() {

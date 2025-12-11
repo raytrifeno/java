@@ -1,13 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mypos.sales.model;
-
-/**
- *
- * @author HP
- */
 
 import java.math.BigDecimal;
 
@@ -17,6 +8,18 @@ public class SalesSummary {
     private BigDecimal totalPaid = BigDecimal.ZERO;
     private BigDecimal totalChange = BigDecimal.ZERO;
 
+    // Default constructor (good practice to keep)
+    public SalesSummary() {}
+
+    // --- THIS CONSTRUCTOR FIXES THE WARNING IN SalesService ---
+    public SalesSummary(int totalTransactions, BigDecimal totalAmount, BigDecimal totalPaid, BigDecimal totalChange) {
+        this.totalTransactions = totalTransactions;
+        this.totalAmount = totalAmount;
+        this.totalPaid = totalPaid;
+        this.totalChange = totalChange;
+    }
+
+    // --- Getters and Setters ---
     public int getTotalTransactions() { return totalTransactions; }
     public void setTotalTransactions(int totalTransactions) { this.totalTransactions = totalTransactions; }
 
@@ -29,4 +32,3 @@ public class SalesSummary {
     public BigDecimal getTotalChange() { return totalChange; }
     public void setTotalChange(BigDecimal totalChange) { this.totalChange = totalChange; }
 }
-

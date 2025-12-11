@@ -16,7 +16,9 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import java.awt.Component;
 import java.io.File;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -24,7 +26,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
-
 /**
  *
  * @author USER
@@ -40,13 +41,31 @@ public class SalesPanel extends javax.swing.JPanel {
     private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final NumberFormat currencyFmt = NumberFormat.getCurrencyInstance(new Locale("id","ID"));
     
+    
     public SalesPanel() {
         initComponents();
-        // load default (Today)
         IntervalSales.setSelectedItem("Today");
+        setupTableRenderers();
         loadSalesData();
+        this.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentShown(java.awt.event.ComponentEvent e) {
+                // Saat panel ini muncul, refresh data otomatis
+                loadSalesData();
+                System.out.println("SalesPanel Refreshed Automatically!");
+            }
+        });
     }
 
+    private void setupTableRenderers() {
+        CurrencyRenderer renderer = new CurrencyRenderer();
+        // Asumsi urutan kolom: [0:ID], [1:User], [2:Receipt], [3:Total], [4:Paid], [5:Change], [6:Date]
+        if (SalesTable.getColumnCount() >= 6) {
+            SalesTable.getColumnModel().getColumn(3).setCellRenderer(renderer); // Total
+            SalesTable.getColumnModel().getColumn(4).setCellRenderer(renderer); // Paid
+            SalesTable.getColumnModel().getColumn(5).setCellRenderer(renderer); // Change
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -71,7 +90,7 @@ public class SalesPanel extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Id Transaction", "Id User", "Receipt Number", "Total Amount", "Amount Paid", "Change Amount", "Sale Datetime"
+                "Id Transaction", "UserName", "Receipt Number", "Total Amount", "Amount Paid", "Change Amount", "Sale Datetime"
             }
         ));
         SalesTable.setPreferredSize(new java.awt.Dimension(800, 700));
@@ -153,18 +172,28 @@ public class SalesPanel extends javax.swing.JPanel {
     private void loadSalesData() {
         SwingUtilities.invokeLater(() -> {
             DefaultTableModel model = (DefaultTableModel) SalesTable.getModel();
-            model.setRowCount(0);
+            model.setRowCount(0); // Bersihkan baris lama
+            
             String interval = (String) IntervalSales.getSelectedItem();
+
             try {
+                // Ambil data lewat Service (yang memanggil DAO)
                 List<Sale> list = salesService.getSalesByInterval(interval);
+
                 for (Sale s : list) {
                     Object[] row = new Object[] {
                         s.getId(),
-                        s.getUserId(),
+                        
+                        // TAMPILKAN NAMA KASIR
+                        s.getCashierName(), 
+                        
                         s.getReceiptNumber(),
-                        formatCurrency(s.getTotalAmount()),
-                        formatCurrency(s.getAmountPaid()),
-                        formatCurrency(s.getChangeAmount()),
+                        
+                        // Data Uang (BigDecimal Asli) -> Biar Renderer yang format
+                        s.getTotalAmount(), 
+                        s.getAmountPaid(), 
+                        s.getChangeAmount(),
+                        
                         s.getSaleDate() == null ? "" : s.getSaleDate().format(dtf)
                     };
                     model.addRow(row);
@@ -176,7 +205,7 @@ public class SalesPanel extends javax.swing.JPanel {
         });
     }
     
-    private void exportSalesListToPdf(List<Sale> list, String interval) throws Exception {
+private void exportSalesListToPdf(List<Sale> list, String interval) throws Exception {
         if (list == null || list.isEmpty()) throw new Exception("Tidak ada data untuk diexport.");
 
         StoreDao storeDao = new StoreDaoImpl();
@@ -225,7 +254,7 @@ public class SalesPanel extends javax.swing.JPanel {
         cs.beginText();
         cs.setFont(PDType1Font.HELVETICA_BOLD, 10);
         cs.newLineAtOffset(margin, y);
-        cs.showText(String.format("%-4s %-6s %-20s %-12s %-12s %-12s %-20s",
+        cs.showText(String.format("%-4s %-15s %-20s %-12s %-12s %-12s %-20s",
                 "No","User","Receipt","Total","Paid","Change","Sale Date"));
         cs.endText();
         y -= leading;
@@ -242,9 +271,9 @@ public class SalesPanel extends javax.swing.JPanel {
                 y = yStart;
             }
 
-            String line = String.format("%-4d %-6s %-20s %-12s %-12s %-12s %-20s",
+            String line = String.format("%-4d %-15s %-20s %-12s %-12s %-12s %-20s",
                     no++,
-                    s.getUserId(),
+                    truncate(s.getCashierName(), 15), // Gunakan Nama Kasir di PDF juga
                     truncate(s.getReceiptNumber(), 20),
                     formatCurrencySimple(s.getTotalAmount()),
                     formatCurrencySimple(s.getAmountPaid()),
@@ -270,16 +299,16 @@ public class SalesPanel extends javax.swing.JPanel {
 
         cs.setFont(PDType1Font.HELVETICA, 10);
         cs.beginText(); cs.newLineAtOffset(margin, y); cs.showText("Total Transactions : " + summary.getTotalTransactions()); cs.endText(); y -= leading;
-        cs.beginText(); cs.newLineAtOffset(margin, y); cs.showText("Total Amount       : " + formatCurrency(summary.getTotalAmount())); cs.endText(); y -= leading;
-        cs.beginText(); cs.newLineAtOffset(margin, y); cs.showText("Total Paid         : " + formatCurrency(summary.getTotalPaid())); cs.endText(); y -= leading;
-        cs.beginText(); cs.newLineAtOffset(margin, y); cs.showText("Total Change       : " + formatCurrency(summary.getTotalChange())); cs.endText();
+        cs.beginText(); cs.newLineAtOffset(margin, y); cs.showText("Total Amount        : " + formatCurrency(summary.getTotalAmount())); cs.endText(); y -= leading;
+        cs.beginText(); cs.newLineAtOffset(margin, y); cs.showText("Total Paid          : " + formatCurrency(summary.getTotalPaid())); cs.endText(); y -= leading;
+        cs.beginText(); cs.newLineAtOffset(margin, y); cs.showText("Total Change        : " + formatCurrency(summary.getTotalChange())); cs.endText();
 
         cs.close();
 
         // save
         File downloads = getDownloadsFolder();
         if (!downloads.exists()) downloads.mkdirs();
-        String fileName = "Laporan_Penjualan_" + timestamp.replace(":", "-") + ".pdf";
+        String fileName = "Laporan_Penjualan_" + timestamp.replace(":", "-").replace(" ", "_") + ".pdf";
         File out = new File(downloads, fileName);
         doc.save(out);
         doc.close();
@@ -287,6 +316,8 @@ public class SalesPanel extends javax.swing.JPanel {
         System.out.println("Saved PDF to: " + out.getAbsolutePath());
     }
     
+    // --- Helper Methods ---
+
     private String truncate(String s, int max) {
         if (s == null) return "";
         return s.length() <= max ? s : s.substring(0, max-3) + "...";
@@ -304,7 +335,6 @@ public class SalesPanel extends javax.swing.JPanel {
         return currencyFmt.format(value);
     }
 
-    // smaller version without currency symbol for table alignment
     private String formatCurrencySimple(BigDecimal value) {
         if (value == null) return "0";
         return value.toPlainString();
@@ -318,4 +348,22 @@ public class SalesPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables
 
+static class CurrencyRenderer extends DefaultTableCellRenderer {
+        private static final NumberFormat FORMATTER = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            
+            if (value instanceof BigDecimal) {
+                setText(FORMATTER.format(value));
+                setHorizontalAlignment(SwingConstants.RIGHT);
+            } else {
+                setText(value == null ? "" : value.toString());
+                setHorizontalAlignment(SwingConstants.LEFT);
+            }
+            return this;
+        }
+    }
 }

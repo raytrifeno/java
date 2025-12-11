@@ -36,7 +36,6 @@ public class CashierPanel extends javax.swing.JPanel {
         jTable2 = new javax.swing.JTable();
         CheckoutSale = new javax.swing.JButton();
         DeleteItem = new javax.swing.JButton();
-        ReceiptNotes = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1030, 670));
 
@@ -88,6 +87,7 @@ public class CashierPanel extends javax.swing.JPanel {
         CheckoutSale.setForeground(new java.awt.Color(0, 153, 51));
         CheckoutSale.setText("Checkout");
         CheckoutSale.addActionListener(this::CheckoutPaymentActionPerformed);
+        CheckoutSale.addActionListener(this::CheckoutSaleActionPerformed);
 
         DeleteItem.setBackground(new java.awt.Color(255, 204, 204));
         DeleteItem.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -95,37 +95,28 @@ public class CashierPanel extends javax.swing.JPanel {
         DeleteItem.setText("Delete");
         DeleteItem.addActionListener(this::DeleteItemActionPerformed);
 
-        ReceiptNotes.setBackground(new java.awt.Color(204, 204, 255));
-        ReceiptNotes.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        ReceiptNotes.setForeground(new java.awt.Color(102, 102, 255));
-        ReceiptNotes.setText("Receipt");
-        ReceiptNotes.addActionListener(this::ReceiptNotesActionPerformed);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(23, 23, 23)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(InputBarcode, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(ScanBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(CheckoutSale, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(DeleteItem, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(CancelSale, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(41, 41, 41)
-                        .addComponent(CheckoutSale, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 980, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(InputBarcode, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(ScanBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(ReceiptNotes, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(CancelSale, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 980, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 796, Short.MAX_VALUE)
+                        .addComponent(jLabel4)))
                 .addGap(27, 27, 27))
         );
         layout.setVerticalGroup(
@@ -136,16 +127,16 @@ public class CashierPanel extends javax.swing.JPanel {
                     .addComponent(jLabel2)
                     .addComponent(jLabel4))
                 .addGap(26, 26, 26)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(ScanBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(InputBarcode)
-                    .addComponent(ReceiptNotes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(ScanBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(InputBarcode))
+                    .addComponent(CheckoutSale, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(CancelSale, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(CheckoutSale, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(DeleteItem, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30))
         );
@@ -241,34 +232,46 @@ public class CashierPanel extends javax.swing.JPanel {
             dialog.setVisible(true);
     }//GEN-LAST:event_CancelSaleActionPerformed
     
-    private void CheckoutPaymentActionPerformed(java.awt.event.ActionEvent evt) {                                           
-// 1. Ambil model tabel
+private void CheckoutPaymentActionPerformed(java.awt.event.ActionEvent evt) {
+        // ---------------------------------------------------------
+        // 1. CEK USER LOGIN (Mencegah user ID null/salah)
+        // ---------------------------------------------------------
+        // Pastikan UserSession sudah dibuat dan diisi saat Login
+        com.mypos.auth.model.User currentUser = com.mypos.auth.model.UserSession.getInstance().getUser();
+
+        if (currentUser == null) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "Error: Sesi habis atau Anda belum login! Silakan logout dan login kembali.",
+                "Akses Ditolak", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // ---------------------------------------------------------
+        // 2. VALIDASI KERANJANG
+        // ---------------------------------------------------------
         javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable2.getModel();
 
-        // 2. Cek apakah keranjang kosong
         if (model.getRowCount() == 0) {
-            javax.swing.JOptionPane.showMessageDialog(this, 
+            javax.swing.JOptionPane.showMessageDialog(this,
                 "Keranjang belanja kosong!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // 3. Hitung Total Belanja & Siapkan Data Barang (CartItem)
+        // ---------------------------------------------------------
+        // 3. SIAPKAN DATA (Hitung Total & List Barang)
+        // ---------------------------------------------------------
         java.math.BigDecimal grandTotal = java.math.BigDecimal.ZERO;
         java.util.List<com.mypos.cashier.model.CartItem> items = new java.util.ArrayList<>();
-        
+
         try {
             for (int i = 0; i < model.getRowCount(); i++) {
-                // Ambil data dari setiap kolom
                 String code = (String) model.getValueAt(i, 0);
                 String name = (String) model.getValueAt(i, 1);
                 java.math.BigDecimal price = (java.math.BigDecimal) model.getValueAt(i, 2);
                 int qty = (int) model.getValueAt(i, 3);
                 java.math.BigDecimal subtotal = (java.math.BigDecimal) model.getValueAt(i, 4);
-                
-                // Tambahkan ke total
+
                 grandTotal = grandTotal.add(subtotal);
-                
-                // Masukkan ke list items untuk dikirim ke DAO
                 items.add(new com.mypos.cashier.model.CartItem(code, name, price, qty, subtotal));
             }
         } catch (Exception e) {
@@ -276,28 +279,68 @@ public class CashierPanel extends javax.swing.JPanel {
             return;
         }
 
-        // 4. Buka Dialog Pembayaran
+        // ---------------------------------------------------------
+        // 4. BUKA DIALOG PEMBAYARAN
+        // ---------------------------------------------------------
         java.awt.Window parentWindow = javax.swing.SwingUtilities.getWindowAncestor(this);
         CheckoutPayment dialog = new CheckoutPayment((java.awt.Frame) parentWindow, true, grandTotal);
-        dialog.setVisible(true); 
+        dialog.setVisible(true);
 
-        // 5. Jika Pembayaran Sukses, SIMPAN KE DATABASE
+        // ---------------------------------------------------------
+        // 5. PROSES SIMPAN KE DATABASE (Jika Bayar Sukses)
+        // ---------------------------------------------------------
         if (dialog.isPaymentSuccess()) {
-            
-            // Panggil DAO
+
             com.mypos.cashier.dao.TransactionDao dao = new com.mypos.cashier.dao.TransactionDao();
-            java.math.BigDecimal paidAmount = grandTotal; // Ganti ini nanti dengan input asli
-            java.math.BigDecimal changeAmount = java.math.BigDecimal.ZERO; // Ganti ini nanti
-    
-        boolean saved = dao.saveTransaction(1, grandTotal, dialog.getPaidAmount(), dialog.getChangeAmount(), items);
-    
-        if (saved) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Transaksi Berhasil Disimpan!", "Sukses", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-        model.setRowCount(0); 
-    } else {
-        javax.swing.JOptionPane.showMessageDialog(this, "Gagal menyimpan ke database! Cek Console.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-    }
-   }
+
+            // PENTING: Di sini kita kirim ID User yang asli (currentUser.getId())
+            boolean saved = dao.saveTransaction(
+                currentUser.getId(),        // ID User dari Session
+                grandTotal,                 // Total Belanja
+                dialog.getPaidAmount(),     // Uang yang dibayar (dari Dialog)
+                dialog.getChangeAmount(),   // Kembalian (dari Dialog)
+                items                       // List Barang
+            );
+
+            if (saved) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Transaksi Berhasil Disimpan!", "Sukses", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+                // ======================================================================
+                // MULAI KODE CETAK STRUK DI SINI
+                // ======================================================================
+                int printOption = javax.swing.JOptionPane.showConfirmDialog(this,
+                        "Apakah ingin mencetak struk?", "Cetak Struk",
+                        javax.swing.JOptionPane.YES_NO_OPTION);
+
+                if (printOption == javax.swing.JOptionPane.YES_OPTION) {
+                    try {
+                        // Generate nomor resi sementara untuk dicetak
+                        String receiptNoForPrint = "TRX-" + System.currentTimeMillis();
+
+                        // Panggil StrukPrinter yang baru Anda buat
+                        com.mypos.util.StrukPrinter printer = new com.mypos.util.StrukPrinter(
+                            receiptNoForPrint,
+                            currentUser.getUsername(), // Nama Kasir
+                            items,                     // List Barang
+                            grandTotal,                // Total
+                            dialog.getPaidAmount(),    // Bayar
+                            dialog.getChangeAmount()   // Kembali
+                        );
+
+                        printer.printStruk(); // <--- Ini akan memunculkan dialog pilih printer
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        javax.swing.JOptionPane.showMessageDialog(this, "Gagal Mencetak Struk: " + e.getMessage());
+                    }
+                }
+                // ======================================================================
+
+                model.setRowCount(0); // Bersihkan tabel keranjang
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "Gagal menyimpan ke database! Cek Console.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
     
     private void DeleteItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteItemActionPerformed
@@ -319,16 +362,9 @@ public class CashierPanel extends javax.swing.JPanel {
     model.removeRow(selectedRow);
     }//GEN-LAST:event_DeleteItemActionPerformed
 
-    private void ReceiptNotesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ReceiptNotesActionPerformed
-            java.awt.Window parentWindow = javax.swing.SwingUtilities.getWindowAncestor(this);
-
-            // Buat dialog AddProduct (modal = true)
-            ReceiptSale dialog = new ReceiptSale((java.awt.Frame) parentWindow, true);
-
-            // Tampilkan dialog
-            dialog.setLocationRelativeTo(parentWindow); // Supaya muncul di tengah
-            dialog.setVisible(true);
-    }//GEN-LAST:event_ReceiptNotesActionPerformed
+    private void CheckoutSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CheckoutSaleActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CheckoutSaleActionPerformed
     // === GETTER SEDERHANA ===
     public javax.swing.JTextField getTxtBarcode() {
         return InputBarcode;
@@ -385,7 +421,6 @@ public class CashierPanel extends javax.swing.JPanel {
     private javax.swing.JButton CheckoutSale;
     private javax.swing.JButton DeleteItem;
     private javax.swing.JTextField InputBarcode;
-    private javax.swing.JButton ReceiptNotes;
     private javax.swing.JButton ScanBtn;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;

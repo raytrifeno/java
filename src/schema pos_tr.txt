@@ -1,0 +1,105 @@
+
+-- ==========================================
+-- 1. BERSIHKAN TABEL LAMA (Urutan Penting!)
+-- ==========================================
+SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS sale_items;
+DROP TABLE IF EXISTS sales;
+DROP TABLE IF EXISTS products;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS stores;
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- ==========================================
+-- 2. TABEL TOKO (Untuk Header Struk)
+-- ==========================================
+CREATE TABLE stores (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    address TEXT,
+    phone VARCHAR(20),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- ==========================================
+-- 3. TABEL USERS (Login Admin/Kasir)
+-- ==========================================
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL, -- Menyimpan hasil hash SHA2
+    role ENUM('Admin', 'Cashier') NOT NULL DEFAULT 'Cashier',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- ==========================================
+-- 4. TABEL PRODUCTS (Inventory)
+-- ==========================================
+CREATE TABLE products (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    code VARCHAR(50) NOT NULL UNIQUE, -- Barcode
+    name VARCHAR(150) NOT NULL,
+    category VARCHAR(50) DEFAULT 'General',
+    price DECIMAL(12,2) NOT NULL DEFAULT 0,
+    stock INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE INDEX idx_product_code ON products(code);
+
+-- ==========================================
+-- 5. TABEL SALES (Header Transaksi)
+-- ==========================================
+CREATE TABLE sales (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    receipt_number VARCHAR(50) NOT NULL UNIQUE,
+    sale_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    total_amount DECIMAL(12,2) NOT NULL DEFAULT 0,
+    amount_paid DECIMAL(12,2) NOT NULL DEFAULT 0,
+    change_amount DECIMAL(12,2) NOT NULL DEFAULT 0,
+    user_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE RESTRICT
+) ENGINE=InnoDB;
+
+-- ==========================================
+-- 6. TABEL SALE_ITEMS (Detail Keranjang)
+-- ==========================================
+CREATE TABLE sale_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    sale_id INT NOT NULL,
+    product_id INT NOT NULL,
+    product_name VARCHAR(150) NOT NULL,
+    price DECIMAL(12,2) NOT NULL,
+    quantity INT NOT NULL,
+    subtotal DECIMAL(12,2) NOT NULL,
+    
+    FOREIGN KEY (sale_id) REFERENCES sales(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT
+) ENGINE=InnoDB;
+
+-- ==========================================
+-- 7. DATA AWAL (SEED DATA)
+-- ==========================================
+
+-- Data Toko
+INSERT INTO stores (name, address, phone) 
+VALUES ('VENDRA POS STORE', 'Jl. Maju Mundur No. 1, Jakarta', '0812-3456-7890');
+
+-- Data User (Password menggunakan SHA2-256)
+-- Password asli: 'admin123' -> menjadi hash di database
+INSERT INTO users (username, password, role) 
+VALUES ('admin', SHA2('admin123', 256), 'Admin');
+
+-- Password asli: 'kasir123' -> menjadi hash di database
+INSERT INTO users (username, password, role) 
+VALUES ('kasir', SHA2('kasir123', 256), 'Cashier');
+
+-- Data Produk Contoh
+INSERT INTO products (code, name, category, price, stock)
+VALUES ('123456789', 'Contoh Barang A', 'Snack', 5000, 100);
+
+

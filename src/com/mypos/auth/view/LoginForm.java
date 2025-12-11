@@ -152,6 +152,7 @@ public class LoginForm extends javax.swing.JFrame {
 
         if (user != null) {
             // Authentication successful
+            com.mypos.auth.model.UserSession.getInstance().setUser(user);
             JOptionPane.showMessageDialog(this, "Welcome, " + user.getUsername() + "!", "Login Success", JOptionPane.INFORMATION_MESSAGE);
             com.mypos.app.MainFrame mainFrame = new com.mypos.app.MainFrame();
             mainFrame.setVisible(true);

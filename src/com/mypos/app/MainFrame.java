@@ -17,7 +17,7 @@ public class MainFrame extends javax.swing.JFrame {
     /**
      * Creates new form MainFrame
      */
-    public MainFrame() {
+public MainFrame() {
         initComponents();
         
         // --- Set up the main layout and content panel ---
@@ -44,13 +44,34 @@ public class MainFrame extends javax.swing.JFrame {
         contentPanel.add(new com.mypos.cashier.view.CashierPanel(), CASHIER_KEY);
         contentPanel.add(new com.mypos.sales.view.SalesPanel(), SALES_KEY);
         contentPanel.add(new com.mypos.auth.view.UserManagementPanel(), USERS_KEY);
-
-        // --- Show the Dashboard by default ---
         cardLayout.show(contentPanel, DASHBOARD_KEY);
+        applyRolePermissions(); 
         
         pack();
     }
 
+    // Method untuk mengatur hak akses berdasarkan Role
+    private void applyRolePermissions() {
+        // Ambil user yang sedang login dari Session
+        com.mypos.auth.model.User currentUser = com.mypos.auth.model.UserSession.getInstance().getUser();
+        
+        if (currentUser != null) {
+            // Cek Role user
+            String role = currentUser.getRole(); // Pastikan method getRole() ada di model User Anda
+            
+            // Jika Role adalah "Cashier", matikan tombol yang dilarang
+            if ("Cashier".equalsIgnoreCase(role)) {
+                jButton6.setEnabled(false); // Inventory
+                jButton3.setEnabled(false); // Transaction
+                AddUsers.setEnabled(false); // Add Users
+                
+                // Opsional: Beri tooltip agar user tahu kenapa tombol mati
+                jButton6.setToolTipText("Akses Admin Diperlukan");
+                jButton3.setToolTipText("Akses Admin Diperlukan");
+                AddUsers.setToolTipText("Akses Admin Diperlukan");
+            }
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
