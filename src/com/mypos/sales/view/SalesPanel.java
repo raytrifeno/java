@@ -205,116 +205,289 @@ public class SalesPanel extends javax.swing.JPanel {
         });
     }
     
-private void exportSalesListToPdf(List<Sale> list, String interval) throws Exception {
-        if (list == null || list.isEmpty()) throw new Exception("Tidak ada data untuk diexport.");
+ private void exportSalesListToPdf(List<Sale> list, String interval) throws Exception {
+    if (list == null || list.isEmpty()) throw new Exception("Tidak ada data untuk diexport.");
 
-        StoreDao storeDao = new StoreDaoImpl();
-        Store store = storeDao.getStoreInfo();
-        SalesSummary summary = salesService.getSummaryByInterval(interval);
+    StoreDao storeDao = new StoreDaoImpl();
+    Store store = storeDao.getStoreInfo();
+    SalesSummary summary = salesService.getSummaryByInterval(interval);
 
-        PDDocument doc = new PDDocument();
-        PDPage page = new PDPage();
-        doc.addPage(page);
+    PDDocument doc = new PDDocument();
+    PDPage page = new PDPage();
+    doc.addPage(page);
 
-        PDPageContentStream cs = new PDPageContentStream(doc, page);
-        float margin = 50;
-        float yStart = 760;
-        float y = yStart;
-        float leading = 16;
+    // Page metrics
+    final float margin = 50f;
+    final float pageWidth = page.getMediaBox().getWidth();
+    final float pageHeight = page.getMediaBox().getHeight();
+    final float usableWidth = pageWidth - margin * 2f;
 
-        // HEADER
-        cs.beginText();
-        cs.setFont(PDType1Font.HELVETICA_BOLD, 16);
-        cs.newLineAtOffset(margin, y);
-        cs.showText(store != null && store.getName() != null ? store.getName() : "STORE NAME");
-        cs.endText();
-        y -= leading;
+    // layout: kolom berdasarkan persentase dari usableWidth
+    // Atur persentase sesuai kebutuhan agar tidak terpotong
+    final double pctNo = 0.05;      // 5%
+    final double pctUser = 0.08;    // 8%
+    final double pctReceipt = 0.18; // 22%
+    final double pctTotal = 0.19;   // 16%
+    final double pctPaid = 0.15;    // 15%
+    final double pctChange = 0.12;  // 15%
+    final double pctDate = 0.17;    // 19% (sisa)
 
-        cs.beginText();
-        cs.setFont(PDType1Font.HELVETICA, 10);
-        cs.newLineAtOffset(margin, y);
-        cs.showText(store != null && store.getAddress() != null ? store.getAddress() : "STORE ADDRESS");
-        cs.endText();
-        y -= leading;
+    final float colNoW = (float)(usableWidth * pctNo);
+    final float colUserW = (float)(usableWidth * pctUser);
+    final float colReceiptW = (float)(usableWidth * pctReceipt);
+    final float colTotalW = (float)(usableWidth * pctTotal);
+    final float colPaidW = (float)(usableWidth * pctPaid);
+    final float colChangeW = (float)(usableWidth * pctChange);
+    final float colDateW = (float)(usableWidth * pctDate);
 
-        cs.beginText();
-        cs.newLineAtOffset(margin, y);
-        cs.showText("Telp: " + (store != null && store.getPhone() != null ? store.getPhone() : "-"));
-        cs.endText();
-        y -= leading;
+    // compute X positions (left edges)
+    final float colX0 = margin;
+    final float colX1 = colX0 + colNoW + 8f;
+    final float colX2 = colX1 + colUserW + 8f;
+    final float colX3 = colX2 + colReceiptW + 4f; // Total starts here
+    final float colX4 = colX3 + colTotalW + 6f;    // Paid
+    final float colX5 = colX4 + colPaidW + 7f;     // Change
+    final float colX6 = colX5 + colChangeW + 11f;   // Date (rightmost)
 
-        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        cs.beginText();
-        cs.newLineAtOffset(margin, y);
-        cs.showText("Periode: " + interval + "    Export: " + timestamp);
-        cs.endText();
-        y -= leading * 1.2;
+    // Fonts & sizes
+    final float headerFontSize = 16f;
+    final float subHeaderFontSize = 10f;
+    final float tableHeaderFontSize = 10f;
+    final float tableFontSize = 9f;
+    final float footerFontSize = 10f;
 
-        // TABLE HEADER
-        cs.beginText();
-        cs.setFont(PDType1Font.HELVETICA_BOLD, 10);
-        cs.newLineAtOffset(margin, y);
-        cs.showText(String.format("%-4s %-15s %-20s %-12s %-12s %-12s %-20s",
-                "No","User","Receipt","Total","Paid","Change","Sale Date"));
-        cs.endText();
-        y -= leading;
+    // vertical spacing
+    final float rowLeading = 18f; // increased spacing between rows
 
-        cs.setFont(PDType1Font.HELVETICA, 9);
+    // Y start
+    final float yStart = pageHeight - margin;
+    float y = yStart;
 
-        int no = 1;
-        for (Sale s : list) {
-            if (y < 90) {
-                cs.close();
-                page = new PDPage();
-                doc.addPage(page);
-                cs = new PDPageContentStream(doc, page);
-                y = yStart;
-            }
+    PDPageContentStream cs = new PDPageContentStream(doc, page);
 
-            String line = String.format("%-4d %-15s %-20s %-12s %-12s %-12s %-20s",
-                    no++,
-                    truncate(s.getCashierName(), 15), // Gunakan Nama Kasir di PDF juga
-                    truncate(s.getReceiptNumber(), 20),
-                    formatCurrencySimple(s.getTotalAmount()),
-                    formatCurrencySimple(s.getAmountPaid()),
-                    formatCurrencySimple(s.getChangeAmount()),
-                    s.getSaleDate() == null ? "" : s.getSaleDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
-            );
+    // Draw document header ONCE (first page); returns y after header
+    y = drawDocumentHeader(cs, store, interval, margin, yStart, pageWidth, headerFontSize, subHeaderFontSize);
 
-            cs.beginText();
-            cs.newLineAtOffset(margin, y);
-            cs.showText(line);
-            cs.endText();
-            y -= leading;
+    // small gap then table header
+    y -= 8f;
+
+    // TABLE HEADER (draw once on first page)
+    cs.beginText();
+    cs.setFont(PDType1Font.HELVETICA_BOLD, tableHeaderFontSize);
+    cs.newLineAtOffset(colX0, y);
+    cs.showText("No");
+    cs.endText();
+
+    cs.beginText();
+    cs.setFont(PDType1Font.HELVETICA_BOLD, tableHeaderFontSize);
+    cs.newLineAtOffset(colX1, y);
+    cs.showText("User");
+    cs.endText();
+
+    cs.beginText();
+    cs.setFont(PDType1Font.HELVETICA_BOLD, tableHeaderFontSize);
+    cs.newLineAtOffset(colX2, y);
+    cs.showText("Receipt");
+    cs.endText();
+
+    // center numeric headers inside their column widths
+    String hdrTotal = "         Total";
+    float hdrTotalW = PDType1Font.HELVETICA_BOLD.getStringWidth(hdrTotal) / 1000 * tableHeaderFontSize;
+    float startTotalX = colX3 + (colTotalW - hdrTotalW) / 2f;
+    cs.beginText(); cs.setFont(PDType1Font.HELVETICA_BOLD, tableHeaderFontSize);
+    cs.newLineAtOffset(startTotalX, y); cs.showText(hdrTotal); cs.endText();
+
+    String hdrPaid = "     Paid";
+    float hdrPaidW = PDType1Font.HELVETICA_BOLD.getStringWidth(hdrPaid) / 1000 * tableHeaderFontSize;
+    float startPaidX = colX4 + (colPaidW - hdrPaidW) / 2f;
+    cs.beginText(); cs.setFont(PDType1Font.HELVETICA_BOLD, tableHeaderFontSize);
+    cs.newLineAtOffset(startPaidX, y); cs.showText(hdrPaid); cs.endText();
+
+    String hdrChange = "   Change";
+    float hdrChangeW = PDType1Font.HELVETICA_BOLD.getStringWidth(hdrChange) / 1000 * tableHeaderFontSize;
+    float startChangeX = colX5 + (colChangeW - hdrChangeW) / 2f;
+    cs.beginText(); cs.setFont(PDType1Font.HELVETICA_BOLD, tableHeaderFontSize);
+    cs.newLineAtOffset(startChangeX, y); cs.showText(hdrChange); cs.endText();
+
+    String hdrDate = "Sale Date";
+    float hdrDateW = PDType1Font.HELVETICA_BOLD.getStringWidth(hdrDate) / 1000 * tableHeaderFontSize;
+    float startDateX = colX6 + (colDateW - hdrDateW) / 2f;
+    cs.beginText(); cs.setFont(PDType1Font.HELVETICA_BOLD, tableHeaderFontSize);
+    cs.newLineAtOffset(startDateX, y); cs.showText(hdrDate); cs.endText();
+
+    // move to first data row
+    y -= (tableHeaderFontSize + 6f);
+
+    // Use monospace font for table body (stable width)
+    final PDType1Font tableFont = PDType1Font.COURIER;
+
+    int no = 1;
+    DateTimeFormatter dtfShort = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+    int pageNumber = 1;
+    for (int i = 0; i < list.size(); i++) {
+        Sale s = list.get(i);
+
+        // if running out of space -> new page (do NOT draw document header again)
+        if (y < margin + 120f) {
+            cs.close();
+            page = new PDPage();
+            doc.addPage(page);
+            cs = new PDPageContentStream(doc, page);
+            pageNumber++;
+            // Start content a bit below top margin on subsequent pages
+            y = yStart - 30f;
         }
 
-        // FOOTER / SUMMARY
-        y -= leading;
-        cs.beginText();
-        cs.setFont(PDType1Font.HELVETICA_BOLD, 12);
-        cs.newLineAtOffset(margin, y);
-        cs.showText("SUMMARY");
+        // No (left aligned)
+        cs.beginText(); cs.setFont(tableFont, tableFontSize);
+        cs.newLineAtOffset(colX0, y);
+        cs.showText(String.valueOf(no++));
         cs.endText();
-        y -= leading;
 
-        cs.setFont(PDType1Font.HELVETICA, 10);
-        cs.beginText(); cs.newLineAtOffset(margin, y); cs.showText("Total Transactions : " + summary.getTotalTransactions()); cs.endText(); y -= leading;
-        cs.beginText(); cs.newLineAtOffset(margin, y); cs.showText("Total Amount        : " + formatCurrency(summary.getTotalAmount())); cs.endText(); y -= leading;
-        cs.beginText(); cs.newLineAtOffset(margin, y); cs.showText("Total Paid          : " + formatCurrency(summary.getTotalPaid())); cs.endText(); y -= leading;
-        cs.beginText(); cs.newLineAtOffset(margin, y); cs.showText("Total Change        : " + formatCurrency(summary.getTotalChange())); cs.endText();
+        // User (left aligned)
+        cs.beginText(); cs.setFont(tableFont, tableFontSize);
+        cs.newLineAtOffset(colX1, y);
+        cs.showText(String.valueOf(s.getUserId()));
+        cs.endText();
 
-        cs.close();
+        // Receipt (left aligned, truncated)
+        String receipt = s.getReceiptNumber() == null ? "" : s.getReceiptNumber();
+        String receiptTrunc = truncate(receipt, 40);
+        cs.beginText(); cs.setFont(tableFont, tableFontSize);
+        cs.newLineAtOffset(colX2, y);
+        cs.showText(receiptTrunc);
+        cs.endText();
 
-        // save
-        File downloads = getDownloadsFolder();
-        if (!downloads.exists()) downloads.mkdirs();
-        String fileName = "Laporan_Penjualan_" + timestamp.replace(":", "-").replace(" ", "_") + ".pdf";
-        File out = new File(downloads, fileName);
-        doc.save(out);
-        doc.close();
+        // Numeric columns: right-aligned inside their column widths
+        String totalStr = formatCurrencySimple(s.getTotalAmount());
+        String paidStr = formatCurrencySimple(s.getAmountPaid());
+        String changeStr = formatCurrencySimple(s.getChangeAmount());
 
-        System.out.println("Saved PDF to: " + out.getAbsolutePath());
+        float totalRight = colX3 + colTotalW - 6f;   // right edge minus padding
+        float paidRight  = colX4 + colPaidW - 6f;
+        float changeRight= colX5 + colChangeW - 6f;
+
+        float tw = tableFont.getStringWidth(totalStr) / 1000 * tableFontSize;
+        cs.beginText(); cs.setFont(tableFont, tableFontSize);
+        cs.newLineAtOffset(totalRight - tw, y);
+        cs.showText(totalStr);
+        cs.endText();
+
+        float pw = tableFont.getStringWidth(paidStr) / 1000 * tableFontSize;
+        cs.beginText(); cs.setFont(tableFont, tableFontSize);
+        cs.newLineAtOffset(paidRight - pw, y);
+        cs.showText(paidStr);
+        cs.endText();
+
+        float cw = tableFont.getStringWidth(changeStr) / 1000 * tableFontSize;
+        cs.beginText(); cs.setFont(tableFont, tableFontSize);
+        cs.newLineAtOffset(changeRight - cw, y);
+        cs.showText(changeStr);
+        cs.endText();
+
+        // Sale date (left aligned in its column)
+        String dateStr = s.getSaleDate() == null ? "" : s.getSaleDate().format(dtfShort);
+        cs.beginText(); cs.setFont(tableFont, tableFontSize);
+        cs.newLineAtOffset(colX6, y);
+        cs.showText(dateStr);
+        cs.endText();
+
+        // decrease y by rowLeading for spacing between rows
+        y -= rowLeading;
     }
+
+    // separator before summary on last page
+    y -= 4f;
+    cs.moveTo(margin, y);
+    cs.lineTo(pageWidth - margin, y);
+    cs.stroke();
+    y -= 12f;
+
+    // FOOTER / SUMMARY on last page
+    cs.beginText(); cs.setFont(PDType1Font.HELVETICA_BOLD, 12f);
+    cs.newLineAtOffset(margin, y);
+    cs.showText("SUMMARY");
+    cs.endText();
+    y -= (12f + 6f);
+
+    cs.setFont(PDType1Font.HELVETICA, footerFontSize);
+    cs.beginText(); cs.newLineAtOffset(margin, y); cs.showText("Total Transactions : " + summary.getTotalTransactions()); cs.endText(); y -= (footerFontSize + 4f);
+    cs.beginText(); cs.newLineAtOffset(margin, y); cs.showText("Total Amount       : " + formatCurrency(summary.getTotalAmount())); cs.endText(); y -= (footerFontSize + 4f);
+    cs.beginText(); cs.newLineAtOffset(margin, y); cs.showText("Total Paid         : " + formatCurrency(summary.getTotalPaid())); cs.endText(); y -= (footerFontSize + 4f);
+    cs.beginText(); cs.newLineAtOffset(margin, y); cs.showText("Total Change       : " + formatCurrency(summary.getTotalChange())); cs.endText(); y -= (footerFontSize + 4f);
+
+    // page number bottom-right
+    String pageNumText = "Page " + pageNumber;
+    float pntw = PDType1Font.HELVETICA.getStringWidth(pageNumText) / 1000 * footerFontSize;
+    cs.beginText(); cs.setFont(PDType1Font.HELVETICA, footerFontSize);
+    cs.newLineAtOffset(pageWidth - margin - pntw, margin / 2);
+    cs.showText(pageNumText);
+    cs.endText();
+
+    cs.close();
+
+    // Save file...
+    File downloads = getDownloadsFolder();
+    if (!downloads.exists()) downloads.mkdirs();
+    String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    String fileName = "Laporan_Penjualan_" + timestamp.replace(":", "-") + ".pdf";
+    File out = new File(downloads, fileName);
+    doc.save(out);
+    doc.close();
+    System.out.println("Saved PDF to: " + out.getAbsolutePath());
+}
+
+
+    
+    private float drawDocumentHeader(PDPageContentStream cs, Store store, String interval,
+                                 float margin, float yStart, float pageWidth,
+                                 float headerFontSize, float subHeaderFontSize) throws Exception {
+    float y = yStart;
+
+    // Store name (left)
+    cs.beginText();
+    cs.setFont(PDType1Font.HELVETICA_BOLD, headerFontSize);
+    cs.newLineAtOffset(margin, y);
+    cs.showText(store != null && store.getName() != null ? store.getName() : "STORE NAME");
+    cs.endText();
+    y -= headerFontSize + 4;
+
+    // Store address & phone (left)
+    cs.beginText();
+    cs.setFont(PDType1Font.HELVETICA, subHeaderFontSize);
+    cs.newLineAtOffset(margin, y);
+    String addr = (store != null && store.getAddress() != null) ? store.getAddress() : "STORE ADDRESS";
+    cs.showText(addr);
+    cs.endText();
+    y -= subHeaderFontSize + 2;
+
+    cs.beginText();
+    cs.setFont(PDType1Font.HELVETICA, subHeaderFontSize);
+    cs.newLineAtOffset(margin, y);
+    cs.showText("Telp: " + ((store != null && store.getPhone() != null) ? store.getPhone() : "-"));
+    cs.endText();
+
+    // Export timestamp & periode (right) -> align right on the top line
+    String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    String rightLine = "Periode: " + interval + "    Export: " + timestamp;
+    float textWidth = PDType1Font.HELVETICA.getStringWidth(rightLine) / 1000 * subHeaderFontSize;
+    cs.beginText();
+    cs.setFont(PDType1Font.HELVETICA, subHeaderFontSize);
+    cs.newLineAtOffset(pageWidth - margin - textWidth, y + (headerFontSize + 4) - subHeaderFontSize); // align with top
+    cs.showText(rightLine);
+    cs.endText();
+
+    // draw separator line under header
+    y -= (subHeaderFontSize + 10f);
+    float sepY = y + 6f;
+    cs.moveTo(margin, sepY);
+    cs.lineTo(pageWidth - margin, sepY);
+    cs.stroke();
+
+    return y;
+}
+
     
     // --- Helper Methods ---
 
